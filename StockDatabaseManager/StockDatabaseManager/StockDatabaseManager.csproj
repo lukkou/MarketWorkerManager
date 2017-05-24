@@ -53,6 +53,10 @@
       <HintPath>..\packages\MySql.ConnectorNET.Entity.6.8.3.2\lib\net45\MySql.Data.Entity.EF6.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.4.9\lib\net45\NLog.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="NPOI, Version=2.3.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
       <HintPath>..\packages\NPOI.2.3.0\lib\net40\NPOI.dll</HintPath>
       <Private>True</Private>
@@ -81,6 +85,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Context\StockDatabaseContext.cs" />
+    <Compile Include="Migrations\201705240822515_InitialCreate.cs" />
+    <Compile Include="Migrations\201705240822515_InitialCreate.Designer.cs">
+      <DependentUpon>201705240822515_InitialCreate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\StockMaster.cs" />
     <Compile Include="Program.cs" />
@@ -105,6 +113,11 @@
     <Folder Include="Common\" />
     <Folder Include="Controllers\CreateDataBase\" />
     <Folder Include="Controllers\InsertFirstData\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201705240822515_InitialCreate.resx">
+      <DependentUpon>201705240822515_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,23 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data.Entity;
 using System.ComponentModel.DataAnnotations;
 
 namespace StockDatabaseManager
 {
-	class StockMaster: System.Data.Entity.DbContext
+	class StockMaster
 	{
-		/// <summary>
-		/// 
-		/// </summary>
 		[Key]
 		public int StockCode { get; set; }
-
-		/// <summary>
-		/// 
-		/// </summary>
 		public string StockName { get; set; }
 		public string MarketName { get; set; }
 		public int IndustryCode33 { get;set;}
