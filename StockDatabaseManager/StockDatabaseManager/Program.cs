@@ -10,7 +10,7 @@ namespace StockDatabaseManager
 	{
 		static void Main(string[] args)
 		{
-			if (Properties.Settings.Default.CreateDataBase)
+			if (Properties.Settings.Default.FirstInsert)
 			{
 				//データベースへテーブルを作成
 			}

@@ -26,9 +26,9 @@ namespace StockDatabaseManager.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool CreateDataBase {
+        public bool FirstInsert {
             get {
-                return ((bool)(this["CreateDataBase"]));
+                return ((bool)(this["FirstInsert"]));
             }
         }
     }
