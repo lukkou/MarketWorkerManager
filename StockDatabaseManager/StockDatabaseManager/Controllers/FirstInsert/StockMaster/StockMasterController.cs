@@ -4,18 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using StockDatabaseManager.Context;
-
 namespace StockDatabaseManager.Controllers
 {
-
-	class BaseController
+	class StockMasterController
 	{
-		public StockDatabaseContext dbContext;
-
-		public BaseController()
+		public void ExcelDownload()
 		{
-			dbContext = new StockDatabaseContext();
+
 		}
 	}
 }

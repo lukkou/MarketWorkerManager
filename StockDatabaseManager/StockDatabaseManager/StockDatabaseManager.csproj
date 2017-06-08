@@ -99,8 +99,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\DirectoryUtility.cs" />
     <Compile Include="Common\NPOIUtility.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\FirstInsert\StockMaster\StockMasterController.cs" />
     <Compile Include="DAL\StockDatabaseContext.cs" />
     <Compile Include="Migrations\201705240822515_InitialCreate.cs" />
     <Compile Include="Migrations\201705240822515_InitialCreate.Designer.cs">
@@ -129,7 +131,6 @@
   <ItemGroup>
     <Folder Include="Controllers\FirstInsert\CorporatePerformance\" />
     <Folder Include="Controllers\FirstInsert\StockMarketIndex\" />
-    <Folder Include="Controllers\FirstInsert\StockMaster\" />
     <Folder Include="Controllers\FirstInsert\timeSeriesData\" />
   </ItemGroup>
   <ItemGroup>
