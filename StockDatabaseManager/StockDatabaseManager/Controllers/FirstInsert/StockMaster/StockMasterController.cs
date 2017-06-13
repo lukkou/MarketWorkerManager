@@ -4,13 +4,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using StockDatabaseManager.Common;
+
 namespace StockDatabaseManager.Controllers
 {
-	class StockMasterController
+	class StockMasterController: BaseController
 	{
-		public void ExcelDownload()
+
+		public void StockMasterLoad()
 		{
 
+		}
+
+		public void ExcelDownload()
+		{
+			//保存先を作成
 		}
 	}
 }
