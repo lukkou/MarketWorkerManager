@@ -1,9 +1,12 @@
 ﻿using System;
 using System.IO;
+using System.Collections.Generic;
 using NPOI.HSSF.UserModel;
 using NPOI.XSSF.UserModel;
 using NPOI.SS.UserModel;
 using NPOI.SS.Util;
+
+using StockDatabaseManager.DataModels;
 
 
 namespace StockDatabaseManager.Common
@@ -12,6 +15,9 @@ namespace StockDatabaseManager.Common
 	{
 		private IWorkbook _workbook;
 		private ISheet _sheet;
+
+		public IWorkbook WookBook { get; private set; }
+		public ISheet Sheet { get; private set; }
 
 		private const string EXTENSIONXLS = ".xls";
 		private const string EXTENSIONXLSX = ".xlsx";
@@ -75,6 +81,22 @@ namespace StockDatabaseManager.Common
 				}
 				_sheet = _workbook.CreateSheet();
 			}
+		}
+
+		public string GetExtension()
+		{
+			string r = string.Empty;
+			
+			if (_workbook.GetType() == GetType())
+			{
+				r = EXTENSIONXLS;
+			}
+			else
+			{
+				r = EXTENSIONXLSX;
+			}
+
+			return r;
 		}
 
 		/// <summary>

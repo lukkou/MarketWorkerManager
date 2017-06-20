@@ -104,16 +104,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\DirectoryUtility.cs" />
+    <Compile Include="Common\MessageUtility.cs" />
     <Compile Include="Common\NPOIUtility.cs" />
     <Compile Include="Controllers\BaseController.cs" />
-    <Compile Include="Controllers\FirstInsert\StockMaster\StockMasterController.cs" />
+    <Compile Include="Controllers\StockMasterController.cs" />
     <Compile Include="DAL\StockDatabaseContext.cs" />
+    <Compile Include="Logic\StockMasterLogic.cs" />
     <Compile Include="Migrations\201705240822515_InitialCreate.cs" />
     <Compile Include="Migrations\201705240822515_InitialCreate.Designer.cs">
       <DependentUpon>201705240822515_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ClassMaster.cs" />
+    <Compile Include="Models\DataModels\TokyoStockExchangeExcelModel.cs" />
     <Compile Include="Models\IndustryCode17Master.cs" />
     <Compile Include="Models\IndustryCode33Master.cs" />
     <Compile Include="Models\MarketMaster.cs" />
@@ -127,7 +130,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
@@ -136,11 +141,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controllers\FirstInsert\CorporatePerformance\" />
-    <Folder Include="Controllers\FirstInsert\StockMarketIndex\" />
-    <Folder Include="Controllers\FirstInsert\timeSeriesData\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201705240822515_InitialCreate.resx">
       <DependentUpon>201705240822515_InitialCreate.cs</DependentUpon>
