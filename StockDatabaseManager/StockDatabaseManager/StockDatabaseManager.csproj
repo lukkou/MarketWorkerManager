@@ -106,6 +106,7 @@
     <Compile Include="Common\DirectoryUtility.cs" />
     <Compile Include="Common\MessageUtility.cs" />
     <Compile Include="Common\NPOIUtility.cs" />
+    <Compile Include="Common\TextConvertUtility.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\StockMasterController.cs" />
     <Compile Include="DAL\StockDatabaseContext.cs" />
