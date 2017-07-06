@@ -80,11 +80,11 @@ namespace StockDatabaseManager.Controllers
 						list.Code = Convert.ToInt32(row.GetCell(1).StringCellValue);
 						list.Name = row.GetCell(2).StringCellValue;
 						list.MarketName = row.GetCell(3).StringCellValue;
-						list.Category33Code = TextConvertUtility.ReplaceHyphenToNull(row.GetCell(4).StringCellValue);
+						list.Category33Code = TextConvertUtility.ReplaceHyphenToZero(row.GetCell(4).StringCellValue);
 						list.Category33Name = TextConvertUtility.ReplaceHyphenToEmpty(row.GetCell(5).StringCellValue);
-						list.Category17Code = TextConvertUtility.ReplaceHyphenToNull(row.GetCell(6).StringCellValue);
+						list.Category17Code = TextConvertUtility.ReplaceHyphenToZero(row.GetCell(6).StringCellValue);
 						list.Category17Name = TextConvertUtility.ReplaceHyphenToEmpty(row.GetCell(7).StringCellValue);
-						list.ClassCode = TextConvertUtility.ReplaceHyphenToNull(row.GetCell(8).StringCellValue);
+						list.ClassCode = TextConvertUtility.ReplaceHyphenToZero(row.GetCell(8).StringCellValue);
 						list.ClassName = TextConvertUtility.ReplaceHyphenToEmpty(row.GetCell(9).StringCellValue);
 
 						excelModel.Add(list);

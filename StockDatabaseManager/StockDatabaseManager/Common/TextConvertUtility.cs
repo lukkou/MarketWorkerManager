@@ -45,9 +45,9 @@ namespace StockDatabaseManager.Common
 		/// </summary>
 		/// <param name="str"></param>
 		/// <returns></returns>
-		public static int? ReplaceHyphenToNull(string str)
+		public static int ReplaceHyphenToZero(string str)
 		{
-			int? r = null;
+			int r = 0;
 			if (!string.IsNullOrEmpty(str))
 			{
 				if (str != "-")
