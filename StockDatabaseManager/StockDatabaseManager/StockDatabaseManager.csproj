@@ -109,6 +109,7 @@
     <Compile Include="Controllers\StockTimeLineController.cs" />
     <Compile Include="DAL\StockDatabaseContext.cs" />
     <Compile Include="DynamicJson.cs" />
+    <Compile Include="Logic\LogicContext.cs" />
     <Compile Include="Logic\StockMasterLogic.cs" />
     <Compile Include="Migrations\201705240822515_InitialCreate.cs" />
     <Compile Include="Migrations\201705240822515_InitialCreate.Designer.cs">
