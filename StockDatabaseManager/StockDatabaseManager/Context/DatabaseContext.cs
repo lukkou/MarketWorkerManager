@@ -1,17 +1,31 @@
 ﻿using System.Data.Common;
 using System.Data.Entity;
 using System.Data.Entity.Migrations.History;
-
+using StockDatabaseManager.Models;
 using MySql.Data.Entity;
 using MySql.Data.MySqlClient;
 
 namespace StockDatabaseManager.Context
 {
 
-	class StockDatabaseContext : DbContext
+	class DatabaseContext : DbContext
 	{
-		public StockDatabaseContext() : base("StockDB") { }
+		public DatabaseContext() : base("StockDB") { }
+
+		#region 株
 		public DbSet<StockMaster> StockMasters { get; set; }
+		public DbSet<MarketMaster> MarketMaster { get; set; }
+		public DbSet<ClassMaster> ClassMaster { get; set; }
+		public DbSet<IndustryCode17Master> IndustryCode17Master { get; set; }
+		public DbSet<IndustryCode33Master> IndustryCode33Master { get; set; }
+		public DbSet<CandleStick> CandleStick { get; set; }
+		public DbSet<OldStockMaster> OldStockMaster { get; set; }
+		public DbSet<OldCandleStick> OldCandleStick { get; set; }
+		#endregion
+
+		#region FX
+		public DbSet<IndexCalendar> IndexCalendar { get; set; }
+		#endregion
 	}
 
 	public class MysqlConfiguration : DbConfiguration

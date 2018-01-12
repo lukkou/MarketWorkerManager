@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using StockDatabaseManager.Common;
 
 namespace StockDatabaseManager
 {
@@ -10,15 +6,35 @@ namespace StockDatabaseManager
 	{
 		static void Main(string[] args)
 		{
-			if (Properties.Settings.Default.FirstInsert)
+			if(args.Length == 0)
 			{
-				//データベースへテーブルを作成
+				if (Properties.Settings.Default.FirstInsert)
+				{
+					//データベースへテーブルを作成
+
+					//初回statusを更新
+				}
 			}
 			else
 			{
-				//初回取り込みの実行
-			}
+				if (Properties.Settings.Default.FirstInsert)
+				{
+					//初回の場合はDB作成から…
+					return;
+				}
 
+				string firstStatus = args[0];
+				string secondStatus = args[1];
+				if (firstStatus == Define.StockStatus)
+				{
+					//株式データ
+				}
+				else if (firstStatus == Define.FXStatus)
+				{
+					//FX用データ
+
+				}
+			}
 		}
 	}
 }

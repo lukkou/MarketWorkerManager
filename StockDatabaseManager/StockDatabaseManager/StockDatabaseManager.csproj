@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>StockDatabaseManager</RootNamespace>
     <AssemblyName>StockDatabaseManager</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <PublishUrl>publish\</PublishUrl>
@@ -27,6 +27,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -49,11 +50,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
@@ -68,8 +69,12 @@
       <HintPath>..\packages\MySql.ConnectorNET.Entity.6.8.3.2\lib\net45\MySql.Data.Entity.EF6.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.1-beta3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.4.4.11\lib\net45\NLog.dll</HintPath>
+      <HintPath>..\packages\NLog.4.5.0-rc03\lib\net45\NLog.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NPOI, Version=2.3.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
@@ -90,8 +95,13 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Net" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -100,16 +110,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\DirectoryUtility.cs" />
-    <Compile Include="Common\MessageUtility.cs" />
-    <Compile Include="Common\NPOIUtility.cs" />
-    <Compile Include="Common\TextConvertUtility.cs" />
+    <Compile Include="Common\Define.cs" />
+    <Compile Include="Common\Log.cs" />
+    <Compile Include="Utility\MessageUtility.cs" />
+    <Compile Include="Utility\NPOIUtility.cs" />
+    <Compile Include="Context\LogicContext.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\IndexCalendarController.cs" />
     <Compile Include="Controllers\StockMasterController.cs" />
     <Compile Include="Controllers\StockTimeLineController.cs" />
-    <Compile Include="DAL\StockDatabaseContext.cs" />
+    <Compile Include="Context\DatabaseContext.cs" />
     <Compile Include="DynamicJson.cs" />
-    <Compile Include="Logic\LogicContext.cs" />
+    <Compile Include="Logic\IndexCalendarLogic.cs" />
     <Compile Include="Logic\StockMasterLogic.cs" />
     <Compile Include="Migrations\201705240822515_InitialCreate.cs" />
     <Compile Include="Migrations\201705240822515_InitialCreate.Designer.cs">
@@ -119,9 +131,12 @@
     <Compile Include="Models\CandleStick.cs" />
     <Compile Include="Models\ClassMaster.cs" />
     <Compile Include="Models\DataModels\TokyoStockExchangeExcelModel.cs" />
+    <Compile Include="Models\IndexCalendar.cs" />
     <Compile Include="Models\IndustryCode17Master.cs" />
     <Compile Include="Models\IndustryCode33Master.cs" />
     <Compile Include="Models\MarketMaster.cs" />
+    <Compile Include="Models\OldCandleStick.cs" />
+    <Compile Include="Models\OldStockMaster.cs" />
     <Compile Include="Models\StockMaster.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -130,6 +145,8 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Utility\DirectoryUtility.cs" />
+    <Compile Include="Utility\TextConvertUtility.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

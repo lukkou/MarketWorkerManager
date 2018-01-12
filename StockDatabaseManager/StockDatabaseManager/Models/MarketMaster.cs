@@ -17,7 +17,7 @@ namespace StockDatabaseManager.Models
 		/// 市場・商品区分名
 		/// </summary>
 		[Required]
-		[MaxLength(2)]
+		[MaxLength(50)]
 		[Display(Name = "市場・商品区分名")]
 		public string Name { get; set; }
 	}

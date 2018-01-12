@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StockDatabaseManager.Common
+namespace StockDatabaseManager.Utility
 {
 	public class TextConvertUtility : IFormatProvider
 	{

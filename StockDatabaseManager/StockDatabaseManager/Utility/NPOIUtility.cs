@@ -1,16 +1,28 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using NPOI.HSSF.UserModel;
+using NPOI.XSSF.UserModel;
+using NPOI.SS.UserModel;
+using NPOI.SS.Util;
 
-using StockDatabaseManager.Context;
+using StockDatabaseManager.DataModels;
 
-namespace StockDatabaseManager.Logic
+
+namespace StockDatabaseManager.Utility
 {
-	public class LogicContext: IDisposable
+	public class NPOIUtility : IDisposable
 	{
-		#region IDisposable Support
+		private IWorkbook _workbook;
+		private ISheet _sheet;
+
+		public IWorkbook WookBook { get; private set; }
+		public ISheet Sheet { get; private set; }
+
+		private const string EXTENSIONXLS = ".xls";
+		private const string EXTENSIONXLSX = ".xlsx";
+
+		#region IDisposable メンバー
 		private bool disposedValue = false; // 重複する呼び出しを検出するには
 
 		protected virtual void Dispose(bool disposing)
@@ -30,7 +42,7 @@ namespace StockDatabaseManager.Logic
 		}
 
 		// TODO: 上の Dispose(bool disposing) にアンマネージ リソースを解放するコードが含まれる場合にのみ、ファイナライザーをオーバーライドします。
-		// ~LogicContext() {
+		// ~NPOIUtility() {
 		//   // このコードを変更しないでください。クリーンアップ コードを上の Dispose(bool disposing) に記述します。
 		//   Dispose(false);
 		// }
@@ -46,8 +58,53 @@ namespace StockDatabaseManager.Logic
 		#endregion
 
 		/// <summary>
-		/// DatabaseContext
+		/// コンストラクター
 		/// </summary>
-		private StockDatabaseContext db;
+		/// <param name="extention">拡張子</param>
+		/// <param name="path">ファイルパス(取り込み時のみ使用)</param>
+		public NPOIUtility(string extention, string path)
+		{
+			//パスがある場合取り込みと判断
+			if (string.IsNullOrEmpty(path))
+			{
+				_workbook = WorkbookFactory.Create(path);
+			}
+			else
+			{
+				if (extention == EXTENSIONXLS)
+				{
+					_workbook = new HSSFWorkbook();
+				}
+				else
+				{
+					_workbook = new XSSFWorkbook();
+				}
+				_sheet = _workbook.CreateSheet();
+			}
+		}
+
+		public string GetExtension()
+		{
+			string r = string.Empty;
+			
+			if (_workbook.GetType() == GetType())
+			{
+				r = EXTENSIONXLS;
+			}
+			else
+			{
+				r = EXTENSIONXLSX;
+			}
+
+			return r;
+		}
+
+		/// <summary>
+		/// 作業シートを指定
+		/// </summary>
+		public void SheetDesignation(string sheetName)
+		{
+			_sheet = _workbook.GetSheet(sheetName);
+		}
 	}
 }

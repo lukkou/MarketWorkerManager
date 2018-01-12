@@ -11,11 +11,11 @@ namespace StockDatabaseManager.Controllers
 
 	class BaseController
 	{
-		public StockDatabaseContext dbContext;
+		public LogicContext Logic { get; private set; }
 
 		public BaseController()
 		{
-			dbContext = new StockDatabaseContext();
+			Logic = new LogicContext();
 		}
 	}
 }

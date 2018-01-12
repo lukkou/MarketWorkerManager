@@ -1,12 +1,17 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace StockDatabaseManager.Models
 {
-	/// <summary>
-	/// 銘柄マスター
-	/// </summary>
-	class StockMaster
+	class OldStockMaster
 	{
+		/// <summary>
+		/// Guidキー
+		/// </summary>
+		[Key]
+		[Display(Name = "Guidキー")]
+		public Guid GuidKey { get; set; }
+
 		/// <summary>
 		/// 銘柄コード
 		/// </summary>
@@ -33,7 +38,7 @@ namespace StockDatabaseManager.Models
 		/// 33業種コード
 		/// </summary>
 		[Display(Name = "33業種コード")]
-		public int IndustryCode33 { get;set;}
+		public int IndustryCode33 { get; set; }
 
 		/// <summary>
 		/// 17業種コード

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using NPOI.SS.UserModel;
 
 using StockDatabaseManager.Common;
+using StockDatabaseManager.Utility;
 using StockDatabaseManager.DataModels;
 
 namespace StockDatabaseManager.Controllers
@@ -25,7 +26,6 @@ namespace StockDatabaseManager.Controllers
 		public bool ExcelDownload()
 		{
 			bool r = true;
-			Console.WriteLine(MessageUtility.CreateConsoleMessage("東証上場銘柄一覧ダウンロード開始"));
 
 			//保存先を作成
 			string saveDirectory = Properties.Settings.Default.SaveDirectory;
@@ -60,7 +60,6 @@ namespace StockDatabaseManager.Controllers
 		{
 			bool r = true;
 			var excelModel = new List<TokyoStockExchangeExcelModel> ();
-			Console.WriteLine(MessageUtility.CreateConsoleMessage("銘柄一覧取り込み"));
 
 			string excelPass = Properties.Settings.Default.SaveDirectory + "\\" + DateTime.Now.ToString("yyyyMM") + DOWNLOADEXCEL_FILENAME;
 			if (System.IO.File.Exists(excelPass))
@@ -120,7 +119,7 @@ namespace StockDatabaseManager.Controllers
 		/// <param name="e"></param>
 		private void Client_DownloadProgressCompleted(object sender, System.Net.DownloadDataCompletedEventArgs e)
 		{
-			Console.WriteLine(MessageUtility.CreateConsoleMessage("東証上場銘柄一覧ダウンロード完了"));
+
 		}
 		#endregion
 

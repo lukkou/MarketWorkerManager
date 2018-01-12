@@ -1,7 +1,7 @@
 ﻿using System.IO;
 
 
-namespace StockDatabaseManager.Common
+namespace StockDatabaseManager.Utility
 {
 	class DirectoryUtility
 	{

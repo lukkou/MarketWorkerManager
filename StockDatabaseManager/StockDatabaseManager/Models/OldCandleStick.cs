@@ -1,10 +1,16 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-
 namespace StockDatabaseManager.Models
 {
-	class CandleStick
+	class OldCandleStick
 	{
+		/// <summary>
+		/// Guidキー
+		/// </summary>
+		[Key]
+		[Display(Name = "Guidキー")]
+		public Guid GuidKey { get; set; }
+
 		/// <summary>
 		/// 銘柄コード
 		/// </summary>
