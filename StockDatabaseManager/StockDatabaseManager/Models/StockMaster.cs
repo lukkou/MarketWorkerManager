@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StockDatabaseManager.Models
 {
@@ -12,6 +13,7 @@ namespace StockDatabaseManager.Models
 		/// </summary>
 		[Key]
 		[MaxLength(4)]
+		[Column("stockcode")]
 		[Display(Name = "銘柄コード")]
 		public string StockCode { get; set; }
 
@@ -20,31 +22,40 @@ namespace StockDatabaseManager.Models
 		/// </summary>
 		[Required]
 		[MaxLength(100)]
+		[Column("stockname", TypeName = "nvarchar")]
 		[Display(Name = "銘柄名")]
 		public string StockName { get; set; }
 
 		/// <summary>
 		/// 市場コード
 		/// </summary>
+		[MaxLength(2)]
+		[Column("marketcode")]
 		[Display(Name = "市場コード")]
-		public int MarketCode { get; set; }
+		public string MarketCode { get; set; }
 
 		/// <summary>
 		/// 33業種コード
 		/// </summary>
+		[MaxLength(4)]
+		[Column("industrycode33")]
 		[Display(Name = "33業種コード")]
-		public int IndustryCode33 { get;set;}
+		public string IndustryCode33 { get;set;}
 
 		/// <summary>
 		/// 17業種コード
 		/// </summary>
+		[MaxLength(2)]
+		[Column("industrycode17")]
 		[Display(Name = "17業種コード")]
-		public int IndustryCode17 { get; set; }
+		public string IndustryCode17 { get; set; }
 
 		/// <summary>
 		/// 規模コード
 		/// </summary>
+		[MaxLength(2)]
+		[Column("classcode")]
 		[Display(Name = "規模コード")]
-		public int ClassCode { get; set; }
+		public string ClassCode { get; set; }
 	}
 }

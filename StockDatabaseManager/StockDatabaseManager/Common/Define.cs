@@ -10,7 +10,7 @@ namespace StockDatabaseManager.Common
 	{
 		public const string StockStatus = "0";
 
-		public const string FXStatus = "2";
+		public const string FXStatus = "1";
 
 		/// <summary>
 		/// Fx関連

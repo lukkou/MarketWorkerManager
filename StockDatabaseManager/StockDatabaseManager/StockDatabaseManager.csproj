@@ -112,6 +112,13 @@
   <ItemGroup>
     <Compile Include="Common\Define.cs" />
     <Compile Include="Common\Log.cs" />
+    <Compile Include="Controllers\FirstLoadController.cs" />
+    <Compile Include="Logic\FirstLoadLogic.cs" />
+    <Compile Include="Migrations\201801150701472_init.cs" />
+    <Compile Include="Migrations\201801150701472_init.Designer.cs">
+      <DependentUpon>201801150701472_init.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Utility\MessageUtility.cs" />
     <Compile Include="Utility\NPOIUtility.cs" />
     <Compile Include="Context\LogicContext.cs" />
@@ -123,11 +130,6 @@
     <Compile Include="DynamicJson.cs" />
     <Compile Include="Logic\IndexCalendarLogic.cs" />
     <Compile Include="Logic\StockMasterLogic.cs" />
-    <Compile Include="Migrations\201705240822515_InitialCreate.cs" />
-    <Compile Include="Migrations\201705240822515_InitialCreate.Designer.cs">
-      <DependentUpon>201705240822515_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CandleStick.cs" />
     <Compile Include="Models\ClassMaster.cs" />
     <Compile Include="Models\DataModels\TokyoStockExchangeExcelModel.cs" />
@@ -160,12 +162,6 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201705240822515_InitialCreate.resx">
-      <DependentUpon>201705240822515_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
       <Visible>False</Visible>
@@ -180,6 +176,11 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201801150701472_init.resx">
+      <DependentUpon>201801150701472_init.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
