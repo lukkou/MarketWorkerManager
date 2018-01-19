@@ -19,7 +19,7 @@ namespace StockDatabaseManager.DataModels
 		/// <summary>
 		/// コード
 		/// </summary>
-		public int Code { get; set; }
+		public string Code { get; set; }
 
 		/// <summary>
 		/// 銘柄名
@@ -34,7 +34,7 @@ namespace StockDatabaseManager.DataModels
 		/// <summary>
 		/// 33業種コード
 		/// </summary>
-		public int Category33Code { get; set; }
+		public string Category33Code { get; set; }
 
 		/// <summary>
 		/// 33業種区分
@@ -44,7 +44,7 @@ namespace StockDatabaseManager.DataModels
 		/// <summary>
 		/// 17業種コード
 		/// </summary>
-		public int Category17Code { get; set; }
+		public string Category17Code { get; set; }
 
 		/// <summary>
 		/// 17業種区分
@@ -54,7 +54,7 @@ namespace StockDatabaseManager.DataModels
 		/// <summary>
 		/// 規模コード
 		/// </summary>
-		public int ClassCode { get; set; }
+		public string ClassCode { get; set; }
 
 		/// <summary>
 		/// 規模区分

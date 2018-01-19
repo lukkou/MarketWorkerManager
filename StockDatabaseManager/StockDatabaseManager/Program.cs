@@ -29,6 +29,8 @@ namespace StockDatabaseManager
 				if (firstStatus == Define.StockStatus)
 				{
 					//株式データ
+					var StockMaster = new StockMasterController();
+					StockMaster.StockMasterRunner(secondStatus);
 				}
 				else if (firstStatus == Define.FXStatus)
 				{

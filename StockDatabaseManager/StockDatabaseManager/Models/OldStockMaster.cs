@@ -27,6 +27,14 @@ namespace StockDatabaseManager.Models
 		public string StockCode { get; set; }
 
 		/// <summary>
+		/// 上場廃止日（yyyyMMでしか取得出来ないので現状はyyyyMM）
+		/// </summary>
+		[MaxLength(6)]
+		[Column("deletedate")]
+		[Display(Name = "上場廃止日")]
+		public string DeleteDate { get; set; }
+
+		/// <summary>
 		/// 銘柄名
 		/// </summary>
 		[Required]

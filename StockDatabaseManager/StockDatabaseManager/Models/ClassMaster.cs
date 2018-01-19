@@ -9,12 +9,12 @@ namespace StockDatabaseManager.Models
 	class ClassMaster
 	{
 		/// <summary>
-		/// 上場市場コード
+		/// 上場規模
 		/// </summary>
 		[Key]
 		[MaxLength(2)]
 		[Column("code")]
-		[Display(Name = "上場市場コード")]
+		[Display(Name = "上場規模コード")]
 		public string Code { get; set; }
 
 		/// <summary>
@@ -23,7 +23,7 @@ namespace StockDatabaseManager.Models
 		[Required]
 		[MaxLength(20)]
 		[Column("name", TypeName = "nvarchar")]
-		[Display(Name = "上場市場名")]
+		[Display(Name = "上場規模名")]
 		public string Name { get; set; }
 	}
 }
