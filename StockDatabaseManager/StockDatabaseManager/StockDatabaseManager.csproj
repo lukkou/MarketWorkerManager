@@ -125,13 +125,22 @@
     <Compile Include="Common\Define.cs" />
     <Compile Include="Common\Log.cs" />
     <Compile Include="Controllers\FirstLoadController.cs" />
+    <Compile Include="Logic\CommonLogic.cs" />
     <Compile Include="Logic\FirstLoadLogic.cs" />
     <Compile Include="Migrations\201801150701472_init.cs" />
     <Compile Include="Migrations\201801150701472_init.Designer.cs">
       <DependentUpon>201801150701472_init.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201801190348535_changemodel01.cs" />
+    <Compile Include="Migrations\201801190348535_changemodel01.Designer.cs">
+      <DependentUpon>201801190348535_changemodel01.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801190356300_changemodel02.cs" />
+    <Compile Include="Migrations\201801190356300_changemodel02.Designer.cs">
+      <DependentUpon>201801190356300_changemodel02.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\MasterRegistration.cs" />
+    <Compile Include="Models\ExecutionJob.cs" />
     <Compile Include="Utility\MessageUtility.cs" />
     <Compile Include="Utility\NPOIUtility.cs" />
     <Compile Include="Context\LogicContext.cs" />
@@ -192,6 +201,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201801150701472_init.resx">
       <DependentUpon>201801150701472_init.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801190348535_changemodel01.resx">
+      <DependentUpon>201801190348535_changemodel01.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801190356300_changemodel02.resx">
+      <DependentUpon>201801190356300_changemodel02.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

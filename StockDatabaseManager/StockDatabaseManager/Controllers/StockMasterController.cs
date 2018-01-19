@@ -21,7 +21,7 @@ namespace StockDatabaseManager.Controllers
 			{
 				ExcelDownload();
 
-				List<TokyoStockExchangeExcelModel> lists = Logic.StockMaster.StockExcelToDataModel(GetExcelSaveDirectory() + Define.Stock.TokyoExchangeExcel);
+				List<TokyoStockExchangeExcelModel> lists = Logic.StockMaster.ExcelToDataModel(GetExcelSaveDirectory() + Define.Stock.TokyoExchangeExcel);
 
 
 			}
