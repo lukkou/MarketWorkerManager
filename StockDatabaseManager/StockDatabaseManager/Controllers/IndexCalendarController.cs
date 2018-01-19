@@ -30,13 +30,15 @@ namespace StockDatabaseManager.Controllers
 			catch (Exception e)
 			{
 				Log.Logger.Error(e.ToString());
+				Console.WriteLine(e.Message);
+				Console.ReadKey();
 			}
 		}
 
 		/// <summary>
 		/// 翌月データの取得と登録
 		/// </summary>
-		private async void MonthlyProcessing()
+		private void MonthlyProcessing()
 		{
 			string nextMonthStart = DateTime.Now.AddMonths(1).ToString("yyyy-MM") + "-01";
 			string nextMonthEnd = DateTime.Parse(DateTime.Now.AddMonths(2).ToString("yyyy-MM") + "-01 00:00:00").AddDays(-1).ToString("yyyy-MM-dd");
@@ -51,17 +53,17 @@ namespace StockDatabaseManager.Controllers
 		/// <summary>
 		/// 毎日のデータ更新
 		/// </summary>
-		private async void DailyProcessing()
+		private void DailyProcessing()
 		{
 			string currentMonthStart = DateTime.Now.ToString("yyyy-MM") + "-01";
 			string nowDay = DateTime.Now.ToString("yyyy-MM-dd");
 
-			var responseBody = await Logic.IndexData.GetMql5JsonAsync(currentMonthStart, nowDay);
+			var responseBody = Logic.IndexData.GetMql5JsonAsync(currentMonthStart, nowDay);
 
-			List<IndexCalendar> indexData = Logic.IndexData.ResponseBodyToEntityModel(responseBody);
-			List<IndexCalendar> registeredData = Logic.IndexData.GetRegisteredIndexData(currentMonthStart, nowDay);
+			List<IndexCalendar> webIndexs = Logic.IndexData.ResponseBodyToEntityModel(responseBody.Result);
+			List<IndexCalendar> regIndexs = Logic.IndexData.GetRegisteredIndex(currentMonthStart, nowDay);
 
-			List<IndexCalendar> importData = Logic.IndexData.CompareNewnessIndexData(indexData, registeredData);
+			List<IndexCalendar> importData = Logic.IndexData.CompareNewnessIndexData(webIndexs, regIndexs);
 
 			if (importData.Any())
 			{

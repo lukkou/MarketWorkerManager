@@ -1,5 +1,6 @@
 ﻿using System;
-using StockDatabaseManager.Models;
+using System.Net;
+using System.Net.Http;
 using StockDatabaseManager.Logic;
 
 namespace StockDatabaseManager.Context
@@ -10,6 +11,8 @@ namespace StockDatabaseManager.Context
 		/// データベースコンテキスト
 		/// </summary>
 		private DatabaseContext db { get; set; }
+
+		private HttpClient client { get; set; }
 
 		/// <summary>
 		/// 株マスターロジック
@@ -26,10 +29,11 @@ namespace StockDatabaseManager.Context
 		public LogicContext()
 		{
 			db = new DatabaseContext();
+			client = new HttpClient();
 
 			//各ロジックを生成
-			StockMaster = new StockMasterLogic (db);
-			IndexData = new IndexCalendarLogic(db);
+			StockMaster = new StockMasterLogic { Db = this.db, Client = this.client};
+			IndexData = new IndexCalendarLogic { Db = this.db, Client = this.client };
 		}
 
 		public void Dispose()
@@ -37,6 +41,11 @@ namespace StockDatabaseManager.Context
 			if(db != null)
 			{
 				db.Dispose();
+			}
+
+			if(client != null)
+			{
+				client.Dispose();
 			}
 		}
 	}

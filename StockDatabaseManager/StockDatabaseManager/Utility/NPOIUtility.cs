@@ -6,18 +6,14 @@ using NPOI.XSSF.UserModel;
 using NPOI.SS.UserModel;
 using NPOI.SS.Util;
 
-using StockDatabaseManager.DataModels;
-
 
 namespace StockDatabaseManager.Utility
 {
 	public class NPOIUtility : IDisposable
 	{
-		private IWorkbook _workbook;
-		private ISheet _sheet;
-
 		public IWorkbook WookBook { get; private set; }
 		public ISheet Sheet { get; private set; }
+		public IRow Row { get; private set; }
 
 		private const string EXTENSIONXLS = ".xls";
 		private const string EXTENSIONXLSX = ".xlsx";
@@ -32,6 +28,8 @@ namespace StockDatabaseManager.Utility
 				if (disposing)
 				{
 					// TODO: マネージ状態を破棄します (マネージ オブジェクト)。
+					WookBook.Close();
+					WookBook.Dispose();
 				}
 
 				// TODO: アンマネージ リソース (アンマネージ オブジェクト) を解放し、下のファイナライザーをオーバーライドします。
@@ -67,27 +65,31 @@ namespace StockDatabaseManager.Utility
 			//パスがある場合取り込みと判断
 			if (string.IsNullOrEmpty(path))
 			{
-				_workbook = WorkbookFactory.Create(path);
+				WookBook = WorkbookFactory.Create(path);
 			}
 			else
 			{
 				if (extention == EXTENSIONXLS)
 				{
-					_workbook = new HSSFWorkbook();
+					WookBook = new HSSFWorkbook();
 				}
 				else
 				{
-					_workbook = new XSSFWorkbook();
+					WookBook = new XSSFWorkbook();
 				}
-				_sheet = _workbook.CreateSheet();
+				Sheet = WookBook.CreateSheet();
 			}
 		}
 
+		/// <summary>
+		/// 作業Excelの拡張子を取得
+		/// </summary>
+		/// <returns></returns>
 		public string GetExtension()
 		{
 			string r = string.Empty;
 			
-			if (_workbook.GetType() == GetType())
+			if (WookBook.GetType() == GetType())
 			{
 				r = EXTENSIONXLS;
 			}
@@ -102,9 +104,38 @@ namespace StockDatabaseManager.Utility
 		/// <summary>
 		/// 作業シートを指定
 		/// </summary>
-		public void SheetDesignation(string sheetName)
+		public void SetWorkSheet(string sheetName)
 		{
-			_sheet = _workbook.GetSheet(sheetName);
+			if(Sheet != null)
+			{
+				Sheet = null;
+			}
+
+			if(WookBook == null)
+			{
+				throw new NullReferenceException("作業ファイルを指定してください。");
+			}
+
+			Sheet = WookBook.GetSheet(sheetName);
+		}
+
+		/// <summary>
+		/// 作業行を指定
+		/// </summary>
+		/// <param name="rowNum">作業行</param>
+		public void SetWorkRow(int rowNum)
+		{
+			if(Row != null)
+			{
+				Row = null;
+			}
+
+			if(Sheet == null)
+			{
+				throw new NullReferenceException("作業シートを指定してください。");
+			}
+
+			Row = Sheet.GetRow(rowNum);
 		}
 	}
 }

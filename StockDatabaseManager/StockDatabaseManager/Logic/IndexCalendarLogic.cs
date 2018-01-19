@@ -15,12 +15,9 @@ namespace StockDatabaseManager.Logic
 {
 	class IndexCalendarLogic
 	{
-		private DatabaseContext db { get; set; }
+		public DatabaseContext Db { get; set; }
 
-		public IndexCalendarLogic(DatabaseContext context)
-		{
-			db = context;
-		}
+		public HttpClient Client { get; set; }
 
 		/// <summary>
 		/// 指標カレンダーデータを取得
@@ -33,14 +30,13 @@ namespace StockDatabaseManager.Logic
 			var results = string.Empty;
 
 			StringBuilder url = new StringBuilder();
-			url.Append(Define.Index.Mql5_ApiUrl);
+			url.Append(Define.Index.Mql5ApiUrl);
 			url.Append("date_mode=0");
 			url.Append("&from=" + from + "T00:00:00");
 			url.Append("&to=" + to + "T23:59:59");
 			url.Append("&importance=15&currencies=127");
 
-			using (HttpClient client = new HttpClient())
-			using (HttpResponseMessage response = await client.GetAsync(url.ToString()).ConfigureAwait(false))
+			using (HttpResponseMessage response = await Client.GetAsync(url.ToString()).ConfigureAwait(false))
 			{
 				if (response.StatusCode == HttpStatusCode.OK)
 				{
@@ -55,6 +51,11 @@ namespace StockDatabaseManager.Logic
 			return results;
 		}
 
+		/// <summary>
+		/// 指標Jsonをエンティティモデルに変換
+		/// </summary>
+		/// <param name="responseBody"></param>
+		/// <returns></returns>
 		public List<IndexCalendar> ResponseBodyToEntityModel(string responseBody)
 		{
 			List<IndexCalendar> results = new List<IndexCalendar>();
@@ -87,9 +88,12 @@ namespace StockDatabaseManager.Logic
 		/// <param name="from">範囲日From</param>
 		/// <param name="to">範囲日To</param>
 		/// <returns></returns>
-		public List<IndexCalendar> GetRegisteredIndexData(string from, string to)
+		public List<IndexCalendar> GetRegisteredIndex(string from, string to)
 		{
-			return db.IndexCalendar.Where(x => x.MyReleaseDate >= DateTime.Parse(from) && x.MyReleaseDate <= DateTime.Parse(to)).ToList();
+			var fromData = DateTime.Parse(from + " 00:00:00");
+			var toData = DateTime.Parse(to + " 23:59:59");
+
+			return Db.IndexCalendar.Where(x => x.MyReleaseDate >= fromData && x.MyReleaseDate <= toData).ToList();
 		}
 
 		/// <summary>
@@ -174,7 +178,8 @@ namespace StockDatabaseManager.Logic
 		/// <param name="data"></param>
 		public void RegisteredIndexData(List<IndexCalendar> data)
 		{
-			db.IndexCalendar.AddRange(data);
+			Db.IndexCalendar.AddRange(data);
+			Db.SaveChanges();
 		}
 
 		/// <summary>
