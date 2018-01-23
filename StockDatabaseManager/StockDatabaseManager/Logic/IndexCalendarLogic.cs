@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,7 @@ using Newtonsoft.Json;
 using StockDatabaseManager.Common;
 using StockDatabaseManager.Models;
 using StockDatabaseManager.Context;
+using System.Web.Http;
 
 namespace StockDatabaseManager.Logic
 {
@@ -36,15 +38,16 @@ namespace StockDatabaseManager.Logic
 			url.Append("&to=" + to + "T23:59:59");
 			url.Append("&importance=15&currencies=127");
 
-			using (HttpResponseMessage response = await Client.GetAsync(url.ToString()).ConfigureAwait(false))
+			using (HttpResponseMessage response = await Client.GetAsync(url.ToString()))
 			{
 				if (response.StatusCode == HttpStatusCode.OK)
 				{
-					results = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+					results = await response.Content.ReadAsStringAsync();
 				}
 				else
 				{
 					//THHPステータス 200以外
+					throw new HttpResponseException(HttpStatusCode.NotFound);
 				}
 			}
 
@@ -83,7 +86,7 @@ namespace StockDatabaseManager.Logic
 		}
 
 		/// <summary>
-		/// 指定範囲の経済指標データを取得
+		/// Mysqlより指定範囲の経済指標データを取得
 		/// </summary>
 		/// <param name="from">範囲日From</param>
 		/// <param name="to">範囲日To</param>
@@ -93,7 +96,22 @@ namespace StockDatabaseManager.Logic
 			var fromData = DateTime.Parse(from + " 00:00:00");
 			var toData = DateTime.Parse(to + " 23:59:59");
 
-			return Db.IndexCalendar.Where(x => x.MyReleaseDate >= fromData && x.MyReleaseDate <= toData).ToList();
+			return Db.IndexCalendar.Where(x => x.ReleaseDateGmt >= fromData && x.ReleaseDateGmt <= toData).ToList();
+		}
+
+		/// <summary>
+		/// 経済指標オブジェクトより指定範囲のデータを取得
+		/// </summary>
+		/// <param name="data"></param>
+		/// <param name="from"></param>
+		/// <param name="to"></param>
+		/// <returns></returns>
+		public List<IndexCalendar> GetSpecifiedRangeIndex(List<IndexCalendar> data, string from, string to)
+		{
+			var fromData = DateTime.Parse(from + " 00:00:00");
+			var toData = DateTime.Parse(to + " 23:59:59");
+
+			return data.Where(x => x.MyReleaseDate >= fromData && x.MyReleaseDate <= toData).ToList();
 		}
 
 		/// <summary>
@@ -102,68 +120,75 @@ namespace StockDatabaseManager.Logic
 		/// <param name="Registered"></param>
 		/// <param name="web"></param>
 		/// <returns></returns>
-		public List<IndexCalendar> CompareNewnessIndexData(List<IndexCalendar> dbIndexes, List<IndexCalendar> webIndexes)
+		public List<IndexCalendar> CompareNewnessIndexData(List<IndexCalendar> dbData, List<IndexCalendar> webData)
 		{
 			List<IndexCalendar> results = new List<IndexCalendar>();
 
-			foreach (IndexCalendar webIndex in webIndexes)
+			foreach (IndexCalendar webDetail in webData)
 			{
-				//Idと名前で一致させる（同じ月に同じイベント名の指標が2回は無いはず…）
-				var dbIndex = dbIndexes.Where(x => x.IdKey == webIndex.IdKey && x.EventName == webIndex.EventName).FirstOrDefault();
-
-				if (dbIndex != null)
+				if(webDetail.EventName == "公共部門の純現金要件")
 				{
-					if (dbIndex.Processed == Define.Index.ProcessedOff && dbIndex.Processed == Define.Index.ProcessedOn)
+					Debug.WriteLine(webDetail.EventName);
+				}
+				//Idと名前で一致させる（同じ月に同じイベント名の指標が2回は無いはず…）
+				var dbDetail = dbData.Where(x => x.IdKey == webDetail.IdKey && x.EventName == webDetail.EventName).FirstOrDefault();
+
+				if (dbDetail != null)
+				{
+					if (dbDetail.Processed == Define.Index.ProcessedOff && webDetail.Processed == Define.Index.ProcessedOn)
 					{
 						//指標が公開された場合
-						dbIndex.ForecastValue = webIndex.ForecastValue;
-						dbIndex.ActualValue = webIndex.ActualValue;
+						dbDetail.ForecastValue = webDetail.ForecastValue;
+						dbDetail.ActualValue = webDetail.ActualValue;
+						dbDetail.Processed = Define.Index.ProcessedOn;
 
-						results.Add(dbIndex);
+						results.Add(dbDetail);
 					}
-					else if (string.IsNullOrEmpty(dbIndex.OldPreviousValue) && !string.IsNullOrEmpty(webIndex.OldPreviousValue))
+					else if (string.IsNullOrEmpty(dbDetail.OldPreviousValue) && !string.IsNullOrEmpty(webDetail.OldPreviousValue))
 					{
 						//過去データが更新された場合
-						dbIndex.OldPreviousValue = webIndex.OldPreviousValue;
-						dbIndex.PreviousValue = webIndex.PreviousValue;
+						dbDetail.OldPreviousValue = webDetail.OldPreviousValue;
+						dbDetail.PreviousValue = webDetail.PreviousValue;
 
-						results.Add(dbIndex);
+						results.Add(dbDetail);
 					}
-					else if (string.IsNullOrEmpty(dbIndex.ForecastValue) && !string.IsNullOrEmpty(webIndex.ForecastValue))
+					else if (string.IsNullOrEmpty(dbDetail.ForecastValue) && !string.IsNullOrEmpty(webDetail.ForecastValue))
 					{
 						//予想データが初期では登録されていなかった場合
-						dbIndex.ForecastValue = webIndex.ForecastValue;
+						dbDetail.ForecastValue = webDetail.ForecastValue;
 
-						results.Add(dbIndex);
+						results.Add(dbDetail);
 					}
 				}
 				else
 				{
+					Debug.WriteLine(webDetail.EventName);
+					Debug.WriteLine(webDetail.IdKey);
 					//webのデータがdbに存在しない場合は新規登録を行う
 					IndexCalendar newRow = new IndexCalendar();
 					newRow.GuidKey = Guid.NewGuid();
-					newRow.IdKey = webIndex.IdKey;
-					newRow.ReleaseDate = webIndex.ReleaseDate;
-					webIndex.ReleaseDateGmt = new DateTime(1970, 1, 1).AddTicks(webIndex.ReleaseDate * 10000);
-					if (webIndex.TimeMode == Define.Index.TimeModeUTC)
+					newRow.IdKey = webDetail.IdKey;
+					newRow.ReleaseDate = webDetail.ReleaseDate;
+					webDetail.ReleaseDateGmt = new DateTime(1970, 1, 1).AddTicks(webDetail.ReleaseDate * 10000);
+					if (webDetail.TimeMode == Define.Index.TimeModeUTC)
 					{
-						newRow.MyReleaseDate = webIndex.ReleaseDateGmt.Add(GetMyTimeZone());
+						newRow.MyReleaseDate = webDetail.ReleaseDateGmt.Add(GetMyTimeZone());
 					}
 					else
 					{
-						newRow.MyReleaseDate = webIndex.ReleaseDateGmt;
+						newRow.MyReleaseDate = webDetail.ReleaseDateGmt;
 					}
-					newRow.TimeMode = webIndex.TimeMode;
-					newRow.CurrencyCode = webIndex.CurrencyCode;
-					newRow.EventName = webIndex.EventName;
-					newRow.EventType = webIndex.EventType;
-					newRow.Importance = webIndex.Importance;
-					newRow.Processed = webIndex.Processed;
-					newRow.ActualValue = webIndex.ActualValue;
-					newRow.ForecastValue = webIndex.ForecastValue;
-					newRow.PreviousValue = webIndex.ForecastValue;
-					newRow.OldPreviousValue = webIndex.OldPreviousValue;
-					newRow.LinkUrl = webIndex.LinkUrl;
+					newRow.TimeMode = webDetail.TimeMode;
+					newRow.CurrencyCode = webDetail.CurrencyCode;
+					newRow.EventName = webDetail.EventName;
+					newRow.EventType = webDetail.EventType;
+					newRow.Importance = webDetail.Importance;
+					newRow.Processed = webDetail.Processed;
+					newRow.ActualValue = webDetail.ActualValue;
+					newRow.ForecastValue = webDetail.ForecastValue;
+					newRow.PreviousValue = webDetail.ForecastValue;
+					newRow.OldPreviousValue = webDetail.OldPreviousValue;
+					newRow.LinkUrl = webDetail.LinkUrl;
 
 					results.Add(newRow);
 				}
