@@ -7,6 +7,8 @@ namespace StockDatabaseManager.Common
 		/// <summary>
 		/// ロガー
 		/// </summary>
-		public static ILogger Logger = LogManager.GetCurrentClassLogger();
+		public static ILogger Logger = LogManager.GetLogger("System");
+
+		public static ILogger SqlLogger = LogManager.GetLogger("Sql");
 	}
 }
