@@ -13,6 +13,11 @@ namespace StockDatabaseManager
 				{
 					//データベースへテーブルを作成
 
+
+
+					var IndexCalendar = new IndexCalendarController();
+					IndexCalendar.AddFirstIndexData();
+
 					//初回statusを更新
 				}
 			}

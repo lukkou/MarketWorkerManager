@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Data.Entity;
 using System.Collections.Generic;
 using System.Net;
 using System.Web.Http;
@@ -13,7 +14,6 @@ using StockDatabaseManager.Models;
 using StockDatabaseManager.DataModels;
 
 
-
 namespace StockDatabaseManager.Logic
 {
 	class StockMasterLogic
@@ -21,6 +21,8 @@ namespace StockDatabaseManager.Logic
 		public DatabaseContext Db { get; set; }
 
 		public HttpClient Client { get; set; }
+
+		private DbContextTransaction Tran { get; set; }
 
 		/// <summary>
 		/// 東証の銘柄マスタのExcelをダウンロードする
@@ -125,6 +127,38 @@ namespace StockDatabaseManager.Logic
 		}
 
 		/// <summary>
+		/// EntityFrameworkのトランザクション開始
+		/// </summary>
+		public void BeginTransaction()
+		{
+			Tran = Db.Database.BeginTransaction();
+		}
+
+		/// <summary>
+		/// EntityFrameworkのコミット
+		/// </summary>
+		public void Commit()
+		{
+			if(Tran != null)
+			{
+				Tran.Commit();
+				Tran.Dispose();
+			}
+		}
+
+		/// <summary>
+		/// EntityFrameworkのロールバック
+		/// </summary>
+		public void Rollback()
+		{
+			if (Tran != null)
+			{
+				Tran.Rollback();
+				Tran.Dispose();
+			}
+		}
+
+		/// <summary>
 		/// 銘柄マスターの登録
 		/// </summary>
 		/// <param name="lists"></param>
@@ -180,18 +214,18 @@ namespace StockDatabaseManager.Logic
 		/// </summary>
 		/// <param name="masterList"></param>
 		/// <returns></returns>
-		public async Task AddNewStockMaster(List<StockMaster> newMasterList)
+		public void AddNewStockMaster(List<StockMaster> newMasterList)
 		{
 			Db.StockMasters.AddRange(newMasterList);
-			await Db.SaveChangesAsync();
+			 Db.SaveChanges();
 		}
 
 		/// <summary>
 		/// 上場廃止分のマスターデータをOldに移動
 		/// </summary>
 		/// <param name="deleteMasterList"></param>
-		/// <returns>Oldに移動した際に採番したGuid</returns>
-		public Guid DeleteStockMaster(List<StockMaster> deleteMasterList)
+		/// <returns>Oldに移動したデータのモデル</returns>
+		public List<DeleteStockModel> DeleteStockMaster(List<StockMaster> deleteMasterList)
 		{
 			List<string> deleteCodeList = deleteMasterList.Select(x => x.StockCode).ToList();
 
@@ -200,23 +234,23 @@ namespace StockDatabaseManager.Logic
 			Db.SaveChanges();
 
 			//Oldテーブル用のGuid
-			Guid guid = Guid.NewGuid();
 			List<OldStockMaster> moveList = deleteMasterList.Select(x => new OldStockMaster
-															{
-																GuidKey = guid,
-																StockCode = x.StockCode,
-																DeleteDate = DateTime.Now.ToString("yyyyMM"),
-																StockName = x.StockName,
-																MarketCode = x.MarketCode,
-																IndustryCode33 = x.IndustryCode33,
-																IndustryCode17 = x.IndustryCode17,
-																ClassCode = x.ClassCode
-															}).ToList();
+			{
+				GuidKey = Guid.NewGuid(),
+				StockCode = x.StockCode,
+				DeleteDate = DateTime.Now.ToString("yyyyMM"),
+				StockName = x.StockName,
+				MarketCode = x.MarketCode,
+				IndustryCode33 = x.IndustryCode33,
+				IndustryCode17 = x.IndustryCode17,
+				ClassCode = x.ClassCode
+			}).ToList();
 
 			Db.OldStockMaster.AddRange(moveList);
 			Db.SaveChanges();
 
-			return guid;
+			List<DeleteStockModel> result = moveList.Select(x => new DeleteStockModel { GuidKey = x.GuidKey,StockCode = x.StockCode}).ToList();
+			return result;
 		}
 
 		/// <summary>

@@ -3,18 +3,42 @@ namespace StockDatabaseManager.Common
 {
 	public class Define
 	{
+		/// <summary>
+		/// 株用ステータス
+		/// </summary>
 		public const string StockStatus = "0";
 
+		/// <summary>
+		/// Fx用ステータス
+		/// </summary>
 		public const string FXStatus = "1";
 
 		public class Stock
 		{
+			/// <summary>
+			/// 東証銘柄ExcelDL用URL
+			/// </summary>
 			public const string TokyoExchangeUrl = "http://www.jpx.co.jp/markets/statistics-equities/misc/tvdivq0000001vg2-att/data_j.xls";
 
+			/// <summary>
+			/// 東証銘柄Excelファイル名
+			/// </summary>
+			public const string TokyoExchangeExcel = "\\data.xls";
+
+			/// <summary>
+			/// 東証銘柄Excelシート名
+			/// </summary>
+			public const string ExcelSheetName = "Sheet1";
+
+			/// <summary>
+			/// パス
+			/// </summary>
 			public const string TokyoExchangeDirectory = "\\TokyoExchange";
 
-			public const string TokyoExchangeExcel = "\\data.xls";
-			public const string ExcelSheetName = "Sheet1";
+			/// <summary>
+			/// QuandlApiキー
+			/// </summary>
+			public const string QuandlApiKey = "Y5ysVpvTnde_ppzSbpEG";
 		}
 
 		/// <summary>
@@ -22,8 +46,14 @@ namespace StockDatabaseManager.Common
 		/// </summary>
 		public class Fx
 		{
+			/// <summary>
+			/// 月次処理ステータス
+			/// </summary>
 			public const string Monthly = "0";
 
+			/// <summary>
+			/// 日時処理ステータス
+			/// </summary>
 			public const string Daily = "1";
 		}
 

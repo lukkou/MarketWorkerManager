@@ -124,7 +124,6 @@
   <ItemGroup>
     <Compile Include="Common\Define.cs" />
     <Compile Include="Common\Log.cs" />
-    <Compile Include="Controllers\FirstLoadController.cs" />
     <Compile Include="Logic\CommonLogic.cs" />
     <Compile Include="Logic\StockTimeLineLogic.cs" />
     <Compile Include="Migrations\201801221017434_init.cs" />
@@ -132,6 +131,7 @@
       <DependentUpon>201801221017434_init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\DataModels\DeleteStockModel.cs" />
     <Compile Include="Models\ExecutionJob.cs" />
     <Compile Include="Utility\MessageUtility.cs" />
     <Compile Include="Utility\NPOIUtility.cs" />

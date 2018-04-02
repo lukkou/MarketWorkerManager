@@ -4,15 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StockDatabaseManager.Controllers
+namespace StockDatabaseManager.Logic
 {
-	class FirstLoadController: BaseController
+	class StockTimeLineLogic
 	{
-		public void FirstLoadRunner()
-		{
-
-		}
-
-
 	}
 }

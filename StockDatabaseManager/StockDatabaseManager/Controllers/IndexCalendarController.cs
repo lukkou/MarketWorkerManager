@@ -12,7 +12,7 @@ namespace StockDatabaseManager.Controllers
 	class IndexCalendarController: BaseController
 	{
 		/// <summary>
-		/// 初回実行時に当月から一年前までの指標データを取得
+		/// 初回実行時に当月から一年前までの指標データの作成
 		/// </summary>
 		public void AddFirstIndexData()
 		{

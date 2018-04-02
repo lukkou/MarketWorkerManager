@@ -17,6 +17,18 @@ namespace StockDatabaseManager.Logic
 		public const string ERROR = "Error";
 
 		/// <summary>
+		/// DatabaseとTableが存在しない場合新規に作成
+		/// </summary>
+		public void CreateDatacase()
+		{
+			bool createFlg = Db.Database.CreateIfNotExists();
+			if (!createFlg)
+			{
+				
+			}
+		}
+
+		/// <summary>
 		/// 
 		/// </summary>
 		public void AddSuccessLog(string remarks)
