@@ -49,18 +49,19 @@ namespace StockDatabaseManager.Controllers
 		/// 毎月/毎日の実行処理
 		/// </summary>
 		/// <param name="status"></param>
-		public void IndexCalendarRunner(string status)
+		public void IndexCalendarRunner()
 		{
 			try
 			{
-				if (status == Define.Fx.Monthly)
+				int nowDay = DateTime.Now.Day;
+
+				if (nowDay == 15)
 				{
+					//毎月15日に翌月データを取得する
 					MonthlyProcessing();
 				}
-				else if (status == Define.Fx.Daily)
-				{
-					DailyProcessing();
-				}
+
+				DailyProcessing();
 			}
 			catch (Exception e)
 			{
@@ -71,7 +72,7 @@ namespace StockDatabaseManager.Controllers
 		}
 
 		/// <summary>
-		/// 翌月データの取得と登録
+		/// 翌月の経済指標データの取得と登録
 		/// </summary>
 		private void MonthlyProcessing()
 		{
@@ -88,7 +89,7 @@ namespace StockDatabaseManager.Controllers
 		}
 
 		/// <summary>
-		/// 毎日のデータ更新
+		/// 毎日の経済指標データ更新
 		/// </summary>
 		private void DailyProcessing()
 		{

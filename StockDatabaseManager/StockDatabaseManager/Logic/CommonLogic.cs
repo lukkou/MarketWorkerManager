@@ -27,15 +27,5 @@ namespace StockDatabaseManager.Logic
 				
 			}
 		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public void AddSuccessLog(string remarks)
-		{
-			ExecutionJob jobModel = new ExecutionJob() { GuidKey = Guid.NewGuid(), RegistrationDate = DateTime.Now,RegistrationStatus = SUCCESS , Remarks  = remarks };
-			Db.ExecutionJobs.Add(jobModel);
-			Db.SaveChanges();
-		}
 	}
 }

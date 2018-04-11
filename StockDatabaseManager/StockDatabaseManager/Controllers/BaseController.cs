@@ -17,5 +17,7 @@ namespace StockDatabaseManager.Controllers
 		{
 			Logic = new LogicContext();
 		}
+
+
 	}
 }
