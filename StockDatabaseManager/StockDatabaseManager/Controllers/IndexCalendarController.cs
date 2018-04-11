@@ -24,8 +24,6 @@ namespace StockDatabaseManager.Controllers
 				{
 					string monthStart = DateTime.Now.AddMonths(i * -1).ToString("yyyy-MM") + "-01";
 					string monthEnd = DateTime.Parse(DateTime.Now.AddMonths(i * -1).AddMonths(1).ToString("yyyy-MM") + "-01 00:00:00").AddDays(-1).ToString("yyyy-MM-dd");
-					Debug.WriteLine(monthStart);
-					Debug.WriteLine(monthEnd);
 
 					var task = Logic.IndexData.GetMql5JsonAsync(monthStart, monthEnd);
 					task.Wait();

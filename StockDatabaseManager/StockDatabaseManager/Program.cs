@@ -41,7 +41,7 @@ namespace StockDatabaseManager
 				{
 					//FX用データ
 					var IndexCalendar = new IndexCalendarController();
-					IndexCalendar.IndexCalendarRunner(secondStatus);
+					IndexCalendar.IndexCalendarRunner();
 				}
 			}
 		}
