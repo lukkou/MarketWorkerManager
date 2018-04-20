@@ -25,13 +25,9 @@ namespace StockDatabaseManager.Controllers
 
 				var deffData = Logic.StockMaster.DeffStockMaster(excelData);
 
-				Logic.StockMaster.BeginTransaction();
-
-				Logic.StockMaster.Commit();
 			}
 			catch (Exception e)
 			{
-				Logic.StockMaster.Rollback();
 				Log.Logger.Error(e.ToString());
 				Console.WriteLine(e.Message);
 				Console.ReadKey();
