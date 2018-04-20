@@ -12,38 +12,6 @@ namespace StockDatabaseManager.Controllers
 	class IndexCalendarController: BaseController
 	{
 		/// <summary>
-		/// 初回実行時に当月から一年前までの指標データの作成
-		/// </summary>
-		public void AddFirstIndexData()
-		{
-			try
-			{
-				List<IndexCalendar> yearList = new List<IndexCalendar>();
-				//一年前から当月までの指標データを取得
-				for (int i = 0; i <= 12; i++)
-				{
-					string monthStart = DateTime.Now.AddMonths(i * -1).ToString("yyyy-MM") + "-01";
-					string monthEnd = DateTime.Parse(DateTime.Now.AddMonths(i * -1).AddMonths(1).ToString("yyyy-MM") + "-01 00:00:00").AddDays(-1).ToString("yyyy-MM-dd");
-
-					var task = Logic.IndexData.GetMql5JsonAsync(monthStart, monthEnd);
-					task.Wait();
-
-					List<IndexCalendar> jsonData = Logic.IndexData.ResponseBodyToEntityModel(task.Result);
-					List<IndexCalendar> indexData = Logic.IndexData.GetSpecifiedRangeIndex(jsonData, monthStart, monthEnd);
-					yearList.AddRange(indexData);
-				}
-
-				Logic.IndexData.RegisteredIndexData(yearList);
-			}
-			catch (Exception e)
-			{
-				Log.Logger.Error(e.ToString());
-				Console.WriteLine(e.Message);
-				Console.ReadKey();
-			}
-		}
-
-		/// <summary>
 		/// 毎月/毎日の実行処理
 		/// </summary>
 		/// <param name="status"></param>

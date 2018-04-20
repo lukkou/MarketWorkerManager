@@ -124,7 +124,8 @@
   <ItemGroup>
     <Compile Include="Common\Define.cs" />
     <Compile Include="Common\Log.cs" />
-    <Compile Include="Logic\CommonLogic.cs" />
+    <Compile Include="Controllers\FirstTimeController.cs" />
+    <Compile Include="Logic\BaseLogic.cs" />
     <Compile Include="Logic\StockTimeLineLogic.cs" />
     <Compile Include="Migrations\201801221017434_init.cs" />
     <Compile Include="Migrations\201801221017434_init.Designer.cs">

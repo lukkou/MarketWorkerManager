@@ -8,13 +8,9 @@ using StockDatabaseManager.Context;
 
 namespace StockDatabaseManager.Logic
 {
-	class CommonLogic
+	class BaseLogic
 	{
 		public DatabaseContext Db { get; set; }
-
-		public const string SUCCESS = "Success";
-
-		public const string ERROR = "Error";
 
 		/// <summary>
 		/// DatabaseとTableが存在しない場合新規に作成
@@ -24,7 +20,9 @@ namespace StockDatabaseManager.Logic
 			bool createFlg = Db.Database.CreateIfNotExists();
 			if (!createFlg)
 			{
-				
+				Db.Database.Delete();
+
+				Db.Database.Create();
 			}
 		}
 	}

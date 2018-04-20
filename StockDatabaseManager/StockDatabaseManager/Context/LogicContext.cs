@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Net;
 using System.Net.Http;
 using StockDatabaseManager.Common;
@@ -14,6 +15,11 @@ namespace StockDatabaseManager.Context
 		private DatabaseContext db { get; set; }
 
 		/// <summary>
+		/// データベースコンテキストのトランザクション
+		/// </summary>
+		private DbContextTransaction tran { get; set; }
+
+		/// <summary>
 		/// HTTPクライアントオブジェクト
 		/// ※usingを使用した場合、using毎回ソケットがオープンされ
 		/// クローズしてもTIME_WAIT後ちょっとの間解放されないので
@@ -21,6 +27,11 @@ namespace StockDatabaseManager.Context
 		/// タイミングでクローズする。
 		/// </summary>
 		private HttpClient client { get; set; }
+		
+		/// <summary>
+		/// ベースロジック
+		/// </summary>
+		public BaseLogic Base { get; private set; }
 
 		/// <summary>
 		/// 株マスターロジック
@@ -42,8 +53,41 @@ namespace StockDatabaseManager.Context
 			client = new HttpClient();
 
 			//各ロジックを生成
+			Base = new BaseLogic { Db = db };
 			StockMaster = new StockMasterLogic { Db = this.db, Client = this.client};
 			IndexData = new IndexCalendarLogic { Db = this.db, Client = this.client };
+		}
+
+		/// <summary>
+		/// EntityFrameworkのトランザクション開始
+		/// </summary>
+		public void BeginTransaction()
+		{
+			tran = db.Database.BeginTransaction();
+		}
+
+		/// <summary>
+		/// EntityFrameworkのコミット
+		/// </summary>
+		public void Commit()
+		{
+			if (tran != null)
+			{
+				tran.Commit();
+				tran.Dispose();
+			}
+		}
+
+		/// <summary>
+		/// EntityFrameworkのロールバック
+		/// </summary>
+		public void Rollback()
+		{
+			if (tran != null)
+			{
+				tran.Rollback();
+				tran.Dispose();
+			}
 		}
 
 		/// <summary>

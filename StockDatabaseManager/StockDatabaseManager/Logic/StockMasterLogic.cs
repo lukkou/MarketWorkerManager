@@ -22,8 +22,6 @@ namespace StockDatabaseManager.Logic
 
 		public HttpClient Client { get; set; }
 
-		private DbContextTransaction Tran { get; set; }
-
 		/// <summary>
 		/// 東証の銘柄マスタのExcelをダウンロードする
 		/// </summary>
@@ -124,38 +122,6 @@ namespace StockDatabaseManager.Logic
 			delistResult = deleteHashSet.ToList();
 
 			return new Tuple<List<StockMaster>, List<StockMaster>>(newResult, delistResult);
-		}
-
-		/// <summary>
-		/// EntityFrameworkのトランザクション開始
-		/// </summary>
-		public void BeginTransaction()
-		{
-			Tran = Db.Database.BeginTransaction();
-		}
-
-		/// <summary>
-		/// EntityFrameworkのコミット
-		/// </summary>
-		public void Commit()
-		{
-			if(Tran != null)
-			{
-				Tran.Commit();
-				Tran.Dispose();
-			}
-		}
-
-		/// <summary>
-		/// EntityFrameworkのロールバック
-		/// </summary>
-		public void Rollback()
-		{
-			if (Tran != null)
-			{
-				Tran.Rollback();
-				Tran.Dispose();
-			}
 		}
 
 		/// <summary>

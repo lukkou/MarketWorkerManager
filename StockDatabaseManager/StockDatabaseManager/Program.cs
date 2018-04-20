@@ -11,14 +11,7 @@ namespace StockDatabaseManager
 			{
 				if (Properties.Settings.Default.FirstInsert)
 				{
-					//データベースへテーブルを作成
 
-
-
-					var IndexCalendar = new IndexCalendarController();
-					IndexCalendar.AddFirstIndexData();
-
-					//初回statusを更新
 				}
 			}
 			else
