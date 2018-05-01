@@ -31,17 +31,6 @@ namespace StockDatabaseManager.Migrations
                 .PrimaryKey(t => t.code);
             
             CreateTable(
-                "dbo.ExecutionJobs",
-                c => new
-                    {
-                        guidkey = c.Guid(nullable: false),
-                        registrationdate = c.DateTime(nullable: false, precision: 0),
-                        registrationstatus = c.String(nullable: false, maxLength: 7, storeType: "nvarchar"),
-                        remarks = c.String(nullable: false, unicode: false),
-                    })
-                .PrimaryKey(t => t.guidkey);
-            
-            CreateTable(
                 "dbo.IndexCalendars",
                 c => new
                     {
@@ -85,6 +74,15 @@ namespace StockDatabaseManager.Migrations
                 .PrimaryKey(t => t.code);
             
             CreateTable(
+                "dbo.MarketMasters",
+                c => new
+                    {
+                        marketid = c.String(nullable: false, maxLength: 2, storeType: "nvarchar"),
+                        marketname = c.String(maxLength: 100, storeType: "nvarchar"),
+                    })
+                .PrimaryKey(t => t.marketid);
+            
+            CreateTable(
                 "dbo.OldCandleSticks",
                 c => new
                     {
@@ -118,7 +116,7 @@ namespace StockDatabaseManager.Migrations
                 "dbo.StockMasters",
                 c => new
                     {
-                        stockcode = c.String(nullable: false, maxLength: 4, storeType: "nvarchar"),
+                        stockcode = c.String(nullable: false, maxLength: 5, storeType: "nvarchar"),
                         stockname = c.String(nullable: false, maxLength: 100, storeType: "nvarchar"),
                         marketcode = c.String(maxLength: 2, storeType: "nvarchar"),
                         industrycode33 = c.String(maxLength: 4, storeType: "nvarchar"),
@@ -136,10 +134,10 @@ namespace StockDatabaseManager.Migrations
             DropTable("dbo.StockMasters");
             DropTable("dbo.OldStockMasters");
             DropTable("dbo.OldCandleSticks");
+            DropTable("dbo.MarketMasters");
             DropTable("dbo.IndustryCode33Master");
             DropTable("dbo.IndustryCode17Master");
             DropTable("dbo.IndexCalendars");
-            DropTable("dbo.ExecutionJobs");
             DropTable("dbo.ClassMasters");
             DropTable("dbo.CandleSticks");
         }

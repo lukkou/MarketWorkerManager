@@ -13,7 +13,7 @@ namespace StockDatabaseManager.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201801221017434_init"; }
+            get { return "201805010935023_init"; }
         }
         
         string IMigrationMetadata.Source
