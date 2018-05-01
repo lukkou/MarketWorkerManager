@@ -13,6 +13,16 @@ namespace StockDatabaseManager.Common
 		/// </summary>
 		public const string FXStatus = "1";
 
+		/// <summary>
+		/// コンソールからの実行の場合のステータス
+		/// </summary>
+		public const string RunStatus = "Y";
+
+		/// <summary>
+		/// コンソールからの未実行の場合のステータス
+		/// </summary>
+		public const string NotRunStatus = "N";
+
 		public class Stock
 		{
 			/// <summary>

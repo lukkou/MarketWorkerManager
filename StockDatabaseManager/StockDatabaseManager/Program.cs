@@ -1,5 +1,7 @@
-﻿using StockDatabaseManager.Common;
+﻿using System;
+using StockDatabaseManager.Common;
 using StockDatabaseManager.Controllers;
+
 
 namespace StockDatabaseManager
 {
@@ -9,26 +11,22 @@ namespace StockDatabaseManager
 		{
 			if (args.Length == 0)
 			{
-				if (Properties.Settings.Default.FirstInsert)
-				{
 
+				string deleteExecuteStatus = Console.ReadLine();
+				if(deleteExecuteStatus.ToUpper() == Define.RunStatus)
+				{
+					var firstTime = new FirstTimeController();
+					firstTime.EnvironmentBuilding();
 				}
 			}
 			else
 			{
-				if (Properties.Settings.Default.FirstInsert)
-				{
-					//初回の場合はDB作成から…
-					return;
-				}
 
 				string firstStatus = args[0];
-				string secondStatus = args[1];
 				if (firstStatus == Define.StockStatus)
 				{
 					//株式データ
 					var StockMaster = new StockMasterController();
-					StockMaster.StockMasterRunner(secondStatus);
 				}
 				else if (firstStatus == Define.FXStatus)
 				{
