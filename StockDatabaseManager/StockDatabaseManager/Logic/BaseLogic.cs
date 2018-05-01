@@ -17,11 +17,20 @@ namespace StockDatabaseManager.Logic
 		/// </summary>
 		public void CreateDatacase()
 		{
-			bool createFlg = Db.Database.CreateIfNotExists();
-			if (!createFlg)
-			{
-				Db.Database.Delete();
+			bool createFlg = Db.Database.Exists();
 
+			if (createFlg)
+			{
+				bool compatibleModelFlg = Db.Database.CompatibleWithModel(true);
+				if (!compatibleModelFlg)
+				{
+					//現在のモデルとデータベースのハッシュモデルが違った場合のみマイグレーションを実行
+					//EFの罠 https://qiita.com/Kokudori/items/8f1889d4b5a66df434de
+					Db.Database.Initialize(false);
+				}
+			}
+			else
+			{
 				Db.Database.Create();
 			}
 		}

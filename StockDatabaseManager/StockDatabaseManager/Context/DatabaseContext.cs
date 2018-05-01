@@ -10,14 +10,14 @@ namespace StockDatabaseManager.Context
 
 	class DatabaseContext : DbContext
 	{
-		public DatabaseContext() : base("StockDB") { }
+		public DatabaseContext() : base("Database") { }
 
 		#region 共通
-		public DbSet<ExecutionJob> ExecutionJobs { get;set;}
 		#endregion
 
 		#region 株
 		public DbSet<StockMaster> StockMasters { get; set; }
+		public　DbSet<MarketMaster> MarketMasters { get; set; }
 		public DbSet<ClassMaster> ClassMaster { get; set; }
 		public DbSet<IndustryCode17Master> IndustryCode17Master { get; set; }
 		public DbSet<IndustryCode33Master> IndustryCode33Master { get; set; }

@@ -12,7 +12,7 @@ namespace StockDatabaseManager.Models
 		/// 銘柄コード
 		/// </summary>
 		[Key]
-		[MaxLength(4)]
+		[MaxLength(5)]
 		[Column("stockcode")]
 		[Display(Name = "銘柄コード")]
 		public string StockCode { get; set; }

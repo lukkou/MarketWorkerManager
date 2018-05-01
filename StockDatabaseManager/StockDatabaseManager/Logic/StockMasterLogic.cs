@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Data.Entity;
 using System.Collections.Generic;
 using System.Net;
 using System.Web.Http;
@@ -12,7 +11,6 @@ using StockDatabaseManager.Context;
 using StockDatabaseManager.Utility;
 using StockDatabaseManager.Models;
 using StockDatabaseManager.DataModels;
-
 
 namespace StockDatabaseManager.Logic
 {
@@ -71,20 +69,19 @@ namespace StockDatabaseManager.Logic
 							//１行目はヘッダーなので無視
 							continue;
 						}
-
 						npoi.SetWorkRow(i);
 						TokyoStockExchangeExcelModel list = new TokyoStockExchangeExcelModel();
 
-						list.UpdatedDate = npoi.Row.GetCell(0).StringCellValue;
-						list.Code = npoi.Row.GetCell(1).StringCellValue;
-						list.Name = npoi.Row.GetCell(2).StringCellValue;
-						list.MarketName = npoi.Row.GetCell(3).StringCellValue;
-						list.Category33Code = TextConvertUtility.IsReplaceHyphen(npoi.Row.GetCell(4).StringCellValue) ? string.Empty : npoi.Row.GetCell(4).StringCellValue;
-						list.Category33Name = TextConvertUtility.IsReplaceHyphen(npoi.Row.GetCell(5).StringCellValue) ? string.Empty : npoi.Row.GetCell(5).StringCellValue;
-						list.Category17Code = TextConvertUtility.IsReplaceHyphen(npoi.Row.GetCell(6).StringCellValue) ? string.Empty : npoi.Row.GetCell(6).StringCellValue;
-						list.Category17Name = TextConvertUtility.IsReplaceHyphen(npoi.Row.GetCell(7).StringCellValue) ? string.Empty : npoi.Row.GetCell(7).StringCellValue;
-						list.ClassCode = TextConvertUtility.IsReplaceHyphen(npoi.Row.GetCell(8).StringCellValue) ? string.Empty : npoi.Row.GetCell(8).StringCellValue;
-						list.ClassName = TextConvertUtility.IsReplaceHyphen(npoi.Row.GetCell(9).StringCellValue) ? string.Empty : npoi.Row.GetCell(9).StringCellValue;
+						list.UpdatedDate = npoi.GetCellValue(npoi.Row.GetCell(0));
+						list.Code = npoi.GetCellValue(npoi.Row.GetCell(1));
+						list.Name = npoi.GetCellValue(npoi.Row.GetCell(2));
+						list.MarketName = npoi.GetCellValue(npoi.Row.GetCell(3));
+						list.Category33Code = TextConvertUtility.IsHyphen(npoi.GetCellValue(npoi.Row.GetCell(4))) ? string.Empty : npoi.GetCellValue(npoi.Row.GetCell(4));
+						list.Category33Name = TextConvertUtility.IsHyphen(npoi.GetCellValue(npoi.Row.GetCell(5))) ? string.Empty : npoi.GetCellValue(npoi.Row.GetCell(5));
+						list.Category17Code = TextConvertUtility.IsHyphen(npoi.GetCellValue(npoi.Row.GetCell(6))) ? string.Empty : npoi.GetCellValue(npoi.Row.GetCell(6));
+						list.Category17Name = TextConvertUtility.IsHyphen(npoi.GetCellValue(npoi.Row.GetCell(7))) ? string.Empty : npoi.GetCellValue(npoi.Row.GetCell(7));
+						list.ClassCode = TextConvertUtility.IsHyphen(npoi.GetCellValue(npoi.Row.GetCell(8))) ? string.Empty : npoi.GetCellValue(npoi.Row.GetCell(8));
+						list.ClassName = TextConvertUtility.IsHyphen(npoi.GetCellValue(npoi.Row.GetCell(9))) ? string.Empty : npoi.GetCellValue(npoi.Row.GetCell(9));
 
 						result.Add(list);
 					}
@@ -93,6 +90,28 @@ namespace StockDatabaseManager.Logic
 			else
 			{
 				throw new FileNotFoundException();
+			}
+
+			return result;
+		}
+
+		/// <summary>
+		/// エクセルモデルから市場マスタを作成
+		/// </summary>
+		/// <returns></returns>
+		public List<MarketMaster> ExcelModelToMarketModel(List<TokyoStockExchangeExcelModel> excelList)
+		{
+			List<MarketMaster> result = new List<MarketMaster>();
+
+			var marketGroup = excelList.GroupBy(x => x.MarketName).ToList();
+
+			for (int i = 0; i <= marketGroup.Count - 1; i++)
+			{
+				MarketMaster list = new MarketMaster();
+				list.MarketId = i.ToString();
+				list.MarketName = marketGroup[i].Key;
+
+				result.Add(list);
 			}
 
 			return result;
@@ -109,7 +128,8 @@ namespace StockDatabaseManager.Logic
 			List<StockMaster> delistResult = new List<StockMaster>();
 
 			List<StockMaster> masterList = Db.StockMasters.ToList();
-			List<StockMaster> convertExcelList = ExcelModelToStockMasterModel(excelList);
+			List<MarketMaster> marketMasterList = GetMarketMaster();
+			List<StockMaster> convertExcelList = ExcelModelToStockMasterModel(excelList, marketMasterList);
 
 			//新規上場分の差分を取得
 			HashSet<StockMaster> newHashSet = new HashSet<StockMaster>(convertExcelList);
@@ -125,13 +145,33 @@ namespace StockDatabaseManager.Logic
 		}
 
 		/// <summary>
+		/// 市場マスターのデータを取得
+		/// </summary>
+		/// <returns></returns>
+		public List<MarketMaster> GetMarketMaster()
+		{
+			return Db.MarketMasters.ToList();
+		}
+
+		/// <summary>
+		/// 市場マスターの登録
+		/// </summary>
+		/// <param name="marketList"></param>
+		/// <returns></returns>
+		public async Task AddMarketMaster(List<MarketMaster> marketList)
+		{
+			Db.MarketMasters.AddRange(marketList);
+			await Db.SaveChangesAsync();
+		}
+
+		/// <summary>
 		/// 銘柄マスターの登録
 		/// </summary>
 		/// <param name="lists"></param>
 		/// <returns></returns>
-		public async Task AddStockMaster(List<TokyoStockExchangeExcelModel> excelList)
+		public async Task AddStockMaster(List<TokyoStockExchangeExcelModel> excelList, List<MarketMaster> marketList)
 		{
-			var stockMasters = ExcelModelToStockMasterModel(excelList);
+			var stockMasters = ExcelModelToStockMasterModel(excelList, marketList);
 
 			Db.StockMasters.AddRange(stockMasters);
 			await Db.SaveChangesAsync();
@@ -144,6 +184,7 @@ namespace StockDatabaseManager.Logic
 		public async Task AddIndustryCode17(List<TokyoStockExchangeExcelModel> excelList)
 		{
 			var masterList = excelList.GroupBy(x => x.Category17Code).Select(x => new IndustryCode17Master { Code = x.Key, Name = x.First().Category17Name });
+			masterList = masterList.Where(x => !string.IsNullOrEmpty(x.Code)).Where(x => !string.IsNullOrEmpty(x.Name)).ToList();
 
 			Db.IndustryCode17Master.AddRange(masterList);
 			await Db.SaveChangesAsync();
@@ -157,6 +198,7 @@ namespace StockDatabaseManager.Logic
 		public async Task AddIndustryCode33(List<TokyoStockExchangeExcelModel> excelList)
 		{
 			var masterList = excelList.GroupBy(x => x.Category33Code).Select(x => new IndustryCode33Master { Code = x.Key, Name = x.First().Category33Name });
+			masterList = masterList.Where(x => !string.IsNullOrEmpty(x.Code)).Where(x => !string.IsNullOrEmpty(x.Name)).ToList();
 
 			Db.IndustryCode33Master.AddRange(masterList);
 			await Db.SaveChangesAsync();
@@ -170,6 +212,7 @@ namespace StockDatabaseManager.Logic
 		public async Task AddClass(List<TokyoStockExchangeExcelModel> excelList)
 		{
 			var masterList = excelList.GroupBy(x => x.ClassCode).Select(x => new ClassMaster { Code = x.Key, Name = x.First().ClassName });
+			masterList = masterList.Where(x => !string.IsNullOrEmpty(x.Code)).Where(x => !string.IsNullOrEmpty(x.Name)).ToList();
 
 			Db.ClassMaster.AddRange(masterList);
 			await Db.SaveChangesAsync();
@@ -224,13 +267,13 @@ namespace StockDatabaseManager.Logic
 		/// </summary>
 		/// <param name="excelList"></param>
 		/// <returns></returns>
-		private List<StockMaster> ExcelModelToStockMasterModel(List<TokyoStockExchangeExcelModel> excelList)
+		private List<StockMaster> ExcelModelToStockMasterModel(List<TokyoStockExchangeExcelModel> excelList, List<MarketMaster> marketList)
 		{
 			return excelList.Select(x => new StockMaster
 			{
 				StockCode = x.Code,
 				StockName = x.Name,
-				MarketCode = x.MarketName,
+				MarketCode = marketList.Where(m => m.MarketName == x.MarketName).FirstOrDefault().MarketId ,
 				IndustryCode33 = x.Category33Code,
 				IndustryCode17 = x.Category17Code,
 				ClassCode = x.ClassCode

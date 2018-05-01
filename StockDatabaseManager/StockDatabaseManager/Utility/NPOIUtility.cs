@@ -29,7 +29,6 @@ namespace StockDatabaseManager.Utility
 				{
 					// TODO: マネージ状態を破棄します (マネージ オブジェクト)。
 					WookBook.Close();
-					WookBook.Dispose();
 				}
 
 				// TODO: アンマネージ リソース (アンマネージ オブジェクト) を解放し、下のファイナライザーをオーバーライドします。
@@ -63,7 +62,7 @@ namespace StockDatabaseManager.Utility
 		public NPOIUtility(string extention, string path)
 		{
 			//パスがある場合取り込みと判断
-			if (string.IsNullOrEmpty(path))
+			if (!string.IsNullOrEmpty(path))
 			{
 				WookBook = WorkbookFactory.Create(path);
 			}
@@ -106,12 +105,12 @@ namespace StockDatabaseManager.Utility
 		/// </summary>
 		public void SetWorkSheet(string sheetName)
 		{
-			if(Sheet != null)
+			if (Sheet != null)
 			{
 				Sheet = null;
 			}
 
-			if(WookBook == null)
+			if (WookBook == null)
 			{
 				throw new NullReferenceException("作業ファイルを指定してください。");
 			}
@@ -136,6 +135,49 @@ namespace StockDatabaseManager.Utility
 			}
 
 			Row = Sheet.GetRow(rowNum);
+		}
+
+		/// <summary>
+		/// セルの型に対応した値を取得
+		/// </summary>
+		/// <param name="cell"></param>
+		/// <returns></returns>
+		public string GetCellValue(ICell cell)
+		{
+			string result = string.Empty;
+
+			switch (cell.CellType)
+			{
+				case CellType.String:
+					result = cell.StringCellValue;
+					break;
+
+				case CellType.Numeric:
+					if (DateUtil.IsCellDateFormatted(cell))
+					{
+						result = cell.DateCellValue.ToString();
+					}
+					else
+					{
+						result = cell.NumericCellValue.ToString();
+					}
+					break;
+
+				case CellType.Boolean:
+					result = cell.BooleanCellValue.ToString();
+					break;
+
+				case CellType.Formula:
+					result = cell.CellFormula;
+					break;
+
+				default:
+					result = cell.StringCellValue;
+					break;
+
+			}
+
+			return result;
 		}
 	}
 }

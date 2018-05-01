@@ -25,13 +25,13 @@ namespace StockDatabaseManager.Utility
 		/// </summary>
 		/// <param name="str"></param>
 		/// <returns></returns>
-		public static bool IsReplaceHyphen(string str)
+		public static bool IsHyphen(string str)
 		{
 			bool result = false;
 
 			if (!string.IsNullOrEmpty(str))
 			{
-				if (str != "-")
+				if (str == "-")
 				{
 					result = true;
 				}

@@ -22,7 +22,7 @@ namespace StockDatabaseManager.Controllers
 		/// <summary>
 		/// データベースとテーブルの新規作成
 		/// </summary>
-		protected void CreateDataBase()
+		internal void CreateDataBase()
 		{
 			Logic.Base.CreateDatacase();
 		}
@@ -30,7 +30,7 @@ namespace StockDatabaseManager.Controllers
 		/// <summary>
 		/// 東証より当月の銘柄一覧のExcelを取得
 		/// </summary>
-		protected void ExcelDownload()
+		internal void ExcelDownload()
 		{
 			//ファイルの保存先はMyDocument以下のTokyoExchangeに年月フォルダを作り保存
 			InitializingDirectory(GetExcelSaveDirectory());
@@ -42,7 +42,7 @@ namespace StockDatabaseManager.Controllers
 		/// Excelファイル保存先の初期化
 		/// </summary>
 		/// <param name="pash"></param>
-		protected void InitializingDirectory(string directory)
+		internal void InitializingDirectory(string directory)
 		{
 			if (!Directory.Exists(directory))
 			{
@@ -62,7 +62,7 @@ namespace StockDatabaseManager.Controllers
 		/// 東証Excelの保存先ディレクトリを取得
 		/// </summary>
 		/// <returns></returns>
-		protected string GetExcelSaveDirectory()
+		internal string GetExcelSaveDirectory()
 		{
 			string result = string.Empty;
 
