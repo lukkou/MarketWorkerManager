@@ -13,9 +13,9 @@ namespace StockDatabaseManager.Controllers
 	class FirstTimeController : BaseController
 	{
 		/// <summary>
-		/// 初回のデータ作成などを実行
+		/// エントリーポイント
 		/// </summary>
-		public void EnvironmentBuilding()
+		public void Run()
 		{
 			try
 			{

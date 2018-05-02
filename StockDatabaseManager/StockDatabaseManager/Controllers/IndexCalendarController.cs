@@ -12,10 +12,9 @@ namespace StockDatabaseManager.Controllers
 	class IndexCalendarController: BaseController
 	{
 		/// <summary>
-		/// 毎月/毎日の実行処理
+		/// エントリーポイント
 		/// </summary>
-		/// <param name="status"></param>
-		public void IndexCalendarRunner()
+		public void Run()
 		{
 			try
 			{

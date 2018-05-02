@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,12 +7,13 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Net;
 using System.Net.Http;
+using System.Web.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using StockDatabaseManager.Common;
 using StockDatabaseManager.Models;
 using StockDatabaseManager.Context;
-using System.Web.Http;
+
 
 namespace StockDatabaseManager.Logic
 {
@@ -95,8 +97,10 @@ namespace StockDatabaseManager.Logic
 		{
 			var fromData = DateTime.Parse(from + " 00:00:00");
 			var toData = DateTime.Parse(to + " 23:59:59");
+			var utcFromTime = TimeZoneInfo.ConvertTimeToUtc(fromData);
+			var utcToTime = TimeZoneInfo.ConvertTimeToUtc(toData);
 
-			return Db.IndexCalendar.Where(x => x.ReleaseDateGmt >= fromData && x.ReleaseDateGmt <= toData).ToList();
+			return Db.IndexCalendar.Where(x => x.ReleaseDateGmt >= utcFromTime && x.ReleaseDateGmt <= utcToTime).ToList();
 		}
 
 		/// <summary>
@@ -110,8 +114,10 @@ namespace StockDatabaseManager.Logic
 		{
 			var fromData = DateTime.Parse(from + " 00:00:00");
 			var toData = DateTime.Parse(to + " 23:59:59");
+			var utcFromTime = TimeZoneInfo.ConvertTimeToUtc(fromData);
+			var utcToTime = TimeZoneInfo.ConvertTimeToUtc(toData);
 
-			return data.Where(x => x.MyReleaseDate >= fromData && x.MyReleaseDate <= toData).ToList();
+			return data.Where(x => x.ReleaseDateGmt >= utcFromTime && x.ReleaseDateGmt <= utcToTime).ToList();
 		}
 
 		/// <summary>
@@ -126,10 +132,6 @@ namespace StockDatabaseManager.Logic
 
 			foreach (IndexCalendar webDetail in webData)
 			{
-				if(webDetail.EventName == "公共部門の純現金要件")
-				{
-					Debug.WriteLine(webDetail.EventName);
-				}
 				//Idと名前で一致させる（同じ月に同じイベント名の指標が2回は無いはず…）
 				var dbDetail = dbData.Where(x => x.IdKey == webDetail.IdKey && x.EventName == webDetail.EventName).FirstOrDefault();
 
@@ -162,35 +164,33 @@ namespace StockDatabaseManager.Logic
 				}
 				else
 				{
-					Debug.WriteLine(webDetail.EventName);
-					Debug.WriteLine(webDetail.IdKey);
 					//webのデータがdbに存在しない場合は新規登録を行う
-					IndexCalendar newRow = new IndexCalendar();
-					newRow.GuidKey = Guid.NewGuid();
-					newRow.IdKey = webDetail.IdKey;
-					newRow.ReleaseDate = webDetail.ReleaseDate;
-					webDetail.ReleaseDateGmt = new DateTime(1970, 1, 1).AddTicks(webDetail.ReleaseDate * 10000);
-					if (webDetail.TimeMode == Define.Index.TimeModeUTC)
-					{
-						newRow.MyReleaseDate = webDetail.ReleaseDateGmt.Add(GetMyTimeZone());
-					}
-					else
-					{
-						newRow.MyReleaseDate = webDetail.ReleaseDateGmt;
-					}
-					newRow.TimeMode = webDetail.TimeMode;
-					newRow.CurrencyCode = webDetail.CurrencyCode;
-					newRow.EventName = webDetail.EventName;
-					newRow.EventType = webDetail.EventType;
-					newRow.Importance = webDetail.Importance;
-					newRow.Processed = webDetail.Processed;
-					newRow.ActualValue = webDetail.ActualValue;
-					newRow.ForecastValue = webDetail.ForecastValue;
-					newRow.PreviousValue = webDetail.ForecastValue;
-					newRow.OldPreviousValue = webDetail.OldPreviousValue;
-					newRow.LinkUrl = webDetail.LinkUrl;
+					//IndexCalendar newRow = new IndexCalendar();
+					//newRow.GuidKey = Guid.NewGuid();
+					//newRow.IdKey = webDetail.IdKey;
+					//newRow.ReleaseDate = webDetail.ReleaseDate;
+					//webDetail.ReleaseDateGmt = new DateTime(1970, 1, 1).AddTicks(webDetail.ReleaseDate * 10000);
+					//if (webDetail.TimeMode == Define.Index.TimeModeUTC)
+					//{
+					//	newRow.MyReleaseDate = webDetail.ReleaseDateGmt.Add(GetMyTimeZone());
+					//}
+					//else
+					//{
+					//	newRow.MyReleaseDate = webDetail.ReleaseDateGmt;
+					//}
+					//newRow.TimeMode = webDetail.TimeMode;
+					//newRow.CurrencyCode = webDetail.CurrencyCode;
+					//newRow.EventName = webDetail.EventName;
+					//newRow.EventType = webDetail.EventType;
+					//newRow.Importance = webDetail.Importance;
+					//newRow.Processed = webDetail.Processed;
+					//newRow.ActualValue = webDetail.ActualValue;
+					//newRow.ForecastValue = webDetail.ForecastValue;
+					//newRow.PreviousValue = webDetail.ForecastValue;
+					//newRow.OldPreviousValue = webDetail.OldPreviousValue;
+					//newRow.LinkUrl = webDetail.LinkUrl;
 
-					results.Add(newRow);
+					//results.Add(newRow);
 				}
 			}
 
@@ -201,10 +201,13 @@ namespace StockDatabaseManager.Logic
 		/// 指標データを登録
 		/// </summary>
 		/// <param name="data"></param>
-		public void RegisteredIndexData(List<IndexCalendar> data)
+		public void RegisteredIndexData(List<IndexCalendar> indexCalendars)
 		{
-			Db.IndexCalendar.AddRange(data);
-			Db.SaveChanges();
+			foreach(IndexCalendar indexCalendar in indexCalendars)
+			{
+				Db.IndexCalendar.Attach(indexCalendar);
+				Db.SaveChanges();
+			}
 		}
 
 		/// <summary>

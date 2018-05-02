@@ -52,22 +52,6 @@ namespace StockDatabaseManager.Common
 		}
 
 		/// <summary>
-		/// Fx関連
-		/// </summary>
-		public class Fx
-		{
-			/// <summary>
-			/// 月次処理ステータス
-			/// </summary>
-			public const string Monthly = "0";
-
-			/// <summary>
-			/// 日時処理ステータス
-			/// </summary>
-			public const string Daily = "1";
-		}
-
-		/// <summary>
 		/// 経済指標関連
 		/// </summary>
 		public class Index
@@ -101,6 +85,11 @@ namespace StockDatabaseManager.Common
 			/// Json取得用正規パターン
 			/// </summary>
 			public const string JsonRegular = @"\[.+?\]";
+
+			/// <summary>
+			/// 各国の祝日のイベントタイプ
+			/// </summary>
+			public const int EventType_PublicHoliday = 2;
 		}
 	}
 }

@@ -31,14 +31,5 @@ namespace StockDatabaseManager.Properties {
                 return ((bool)(this["FirstInsert"]));
             }
         }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\BasicFile")]
-        public string SaveDirectory {
-            get {
-                return ((string)(this["SaveDirectory"]));
-            }
-        }
     }
 }

@@ -16,7 +16,7 @@ namespace StockDatabaseManager
 				if(deleteExecuteStatus.ToUpper() == Define.RunStatus)
 				{
 					var firstTime = new FirstTimeController();
-					firstTime.EnvironmentBuilding();
+					firstTime.Run();
 				}
 			}
 			else
@@ -32,7 +32,7 @@ namespace StockDatabaseManager
 				{
 					//FX用データ
 					var IndexCalendar = new IndexCalendarController();
-					IndexCalendar.IndexCalendarRunner();
+					IndexCalendar.Run();
 				}
 			}
 		}

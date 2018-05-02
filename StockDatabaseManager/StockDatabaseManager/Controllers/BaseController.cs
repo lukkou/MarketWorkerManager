@@ -73,6 +73,5 @@ namespace StockDatabaseManager.Controllers
 			result = myDocuments + Define.Stock.TokyoExchangeDirectory + "\\" + currentMonth;
 			return result;
 		}
-
 	}
 }
