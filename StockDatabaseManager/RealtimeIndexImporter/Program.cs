@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using RealtimeIndexImporter.Controllers;
 
 namespace RealtimeIndexImporter
 {
@@ -10,6 +6,18 @@ namespace RealtimeIndexImporter
 	{
 		static void Main(string[] args)
 		{
+			if (args.Length != 0)
+			{
+				using(IndexImportController indexImport = new IndexImportController())
+				{
+					indexImport.Run(args);
+				}
+			}
+			else
+			{
+
+			}
+
 		}
 	}
 }
