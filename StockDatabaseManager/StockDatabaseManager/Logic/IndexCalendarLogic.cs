@@ -201,12 +201,20 @@ namespace StockDatabaseManager.Logic
 		/// 指標データを登録
 		/// </summary>
 		/// <param name="data"></param>
-		public void RegisteredIndexData(List<IndexCalendar> indexCalendars)
+		public void RegisteredIndexData(List<IndexCalendar> indexCalendars, bool addFlg = false)
 		{
-			foreach(IndexCalendar indexCalendar in indexCalendars)
+			if (addFlg)
 			{
-				Db.IndexCalendar.Attach(indexCalendar);
+				Db.IndexCalendar.AddRange(indexCalendars);
 				Db.SaveChanges();
+			}
+			else
+			{
+				foreach (IndexCalendar indexCalendar in indexCalendars)
+				{
+					Db.IndexCalendar.Attach(indexCalendar);
+					Db.SaveChanges();
+				}
 			}
 		}
 
