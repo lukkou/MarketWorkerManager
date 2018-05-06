@@ -21,12 +21,17 @@ namespace StockDatabaseManager.Logic
 
 			if (createFlg)
 			{
-				bool compatibleModelFlg = Db.Database.CompatibleWithModel(true);
+				bool compatibleModelFlg = Db.Database.CompatibleWithModel(false);
 				if (!compatibleModelFlg)
 				{
 					//現在のモデルとデータベースのハッシュモデルが違った場合のみマイグレーションを実行
 					//EFの罠 https://qiita.com/Kokudori/items/8f1889d4b5a66df434de
-					Db.Database.Initialize(false);
+					Db.Database.Initialize(true);
+				}
+				else
+				{
+					Db.Database.Delete();
+					Db.Database.Create();
 				}
 			}
 			else
