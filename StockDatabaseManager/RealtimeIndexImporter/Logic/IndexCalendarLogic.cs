@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Data.Entity;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -30,17 +31,18 @@ namespace RealtimeIndexImporter.Logic
 		{
 			var results = string.Empty;
 
-			string fromDay = DateTime.Now.AddHours(-1).ToString("yyyy-MM-dd");
-			string fromTime = DateTime.Now.AddHours(-1).ToString("hh:mm:ss");
+			DateTime weekMonday = GetFirstDayOfThisWeek(DateTime.Now);
+			string fromDay = weekMonday.ToString("yyyy-MM-dd");
+			string fromTime = "00:00:00";
 
-			string toDay = DateTime.Now.AddHours(1).ToString("yyyy-MM-dd");
-			string toTime = DateTime.Now.AddHours(1).ToString("hh:mm:ss");
+			string toDay = DateTime.Now.AddDays(1).ToString("yyyy-MM-dd");
+			string toTime = "23:59:59";
 
 			StringBuilder url = new StringBuilder();
 			url.Append(Define.Mql5ApiUrl);
-			url.Append("date_mode=0");
-			url.Append("&from=" + fromDay + " T" + fromTime);
-			url.Append("&to=" + toDay + " T" + toTime);
+			url.Append("date_mode=1");
+			url.Append("&from=" + fromDay + "T" + fromTime);
+			url.Append("&to=" + toDay + "T" + toTime);
 			url.Append("&importance=15&currencies=127");
 
 			using (HttpResponseMessage response = await Client.GetAsync(url.ToString()))
@@ -70,20 +72,23 @@ namespace RealtimeIndexImporter.Logic
 			List<IndexCalendar> results = new List<IndexCalendar>();
 
 			Match jsonObj = Regex.Match(responseBody, Define.JsonRegular);
-			results = JsonConvert.DeserializeObject<List<IndexCalendar>>(jsonObj.ToString());
-
-			TimeSpan myUtc = GetMyTimeZone();
-			foreach (IndexCalendar result in results)
+			if (jsonObj.Success)
 			{
-				result.GuidKey = Guid.NewGuid();
-				result.ReleaseDateGmt = new DateTime(1970, 1, 1).AddTicks(result.ReleaseDate * 10000);
-				if (result.TimeMode == Define.TimeModeUTC)
+				results = JsonConvert.DeserializeObject<List<IndexCalendar>>(jsonObj.ToString());
+
+				TimeSpan myUtc = GetMyTimeZone();
+				foreach (IndexCalendar result in results)
 				{
-					result.MyReleaseDate = result.ReleaseDateGmt.Add(myUtc);
-				}
-				else
-				{
-					result.MyReleaseDate = result.ReleaseDateGmt;
+					result.GuidKey = Guid.NewGuid();
+					result.ReleaseDateGmt = new DateTime(1970, 1, 1).AddTicks(result.ReleaseDate * 10000);
+					if (result.TimeMode == Define.TimeModeUTC)
+					{
+						result.MyReleaseDate = result.ReleaseDateGmt.Add(myUtc);
+					}
+					else
+					{
+						result.MyReleaseDate = result.ReleaseDateGmt;
+					}
 				}
 			}
 
@@ -125,6 +130,7 @@ namespace RealtimeIndexImporter.Logic
 			foreach (IndexCalendar indexCalendar in indexCalendars)
 			{
 				Db.IndexCalendars.Attach(indexCalendar);
+				Db.Entry(indexCalendar).State = EntityState.Modified;
 				Db.SaveChanges();
 			}
 		}
@@ -136,6 +142,22 @@ namespace RealtimeIndexImporter.Logic
 		private TimeSpan GetMyTimeZone()
 		{
 			return TimeZoneInfo.Local.BaseUtcOffset;
+		}
+
+		/// <summary>
+		/// 週初め月曜の日付を取得
+		/// </summary>
+		/// <param name="nowDate"></param>
+		/// <returns></returns>
+		private DateTime GetFirstDayOfThisWeek(DateTime nowDate)
+		{
+			int deff = DayOfWeek.Monday - nowDate.DayOfWeek;
+			if (deff > 0)
+			{
+				deff -= 7;
+			}
+
+			return nowDate.AddDays(deff);
 		}
 	}
 }
