@@ -18,16 +18,16 @@ namespace StockDatabaseManager.Context
 		#region 株
 		public DbSet<StockMaster> StockMasters { get; set; }
 		public　DbSet<MarketMaster> MarketMasters { get; set; }
-		public DbSet<ClassMaster> ClassMaster { get; set; }
-		public DbSet<IndustryCode17Master> IndustryCode17Master { get; set; }
-		public DbSet<IndustryCode33Master> IndustryCode33Master { get; set; }
-		public DbSet<CandleStick> CandleStick { get; set; }
-		public DbSet<OldStockMaster> OldStockMaster { get; set; }
-		public DbSet<OldCandleStick> OldCandleStick { get; set; }
+		public DbSet<ClassMaster> ClassMasters { get; set; }
+		public DbSet<IndustryCode17Master> IndustryCode17Masters { get; set; }
+		public DbSet<IndustryCode33Master> IndustryCode33Masters { get; set; }
+		public DbSet<CandleStick> CandleSticks { get; set; }
+		public DbSet<OldStockMaster> OldStockMasters { get; set; }
+		public DbSet<OldCandleStick> OldCandleSticks { get; set; }
 		#endregion
 
 		#region FX
-		public DbSet<IndexCalendar> IndexCalendar { get; set; }
+		public DbSet<IndexCalendar> IndexCalendars { get; set; }
 		#endregion
 	}
 

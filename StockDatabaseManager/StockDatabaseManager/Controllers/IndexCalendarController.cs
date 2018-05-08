@@ -64,11 +64,11 @@ namespace StockDatabaseManager.Controllers
 			var task = Logic.IndexData.GetMql5JsonAsync(currentMonthStart, nowDay);
 			task.Wait();
 
-			List<IndexCalendar> regData = Logic.IndexData.GetRegisteredIndex(currentMonthStart, nowDay);
+			List<IndexCalendar> myData = Logic.IndexData.GetRegisteredIndex(currentMonthStart, nowDay);
 			List<IndexCalendar> jsonData = Logic.IndexData.ResponseBodyToEntityModel(task.Result);
 			List<IndexCalendar> webData = Logic.IndexData.GetSpecifiedRangeIndex(jsonData, currentMonthStart, nowDay);
 
-			List<IndexCalendar> importData = Logic.IndexData.CompareNewnessIndexData(regData, webData);
+			List<IndexCalendar> importData = Logic.IndexData.CompareNewnessIndexData(myData, webData);
 
 			if (importData.Any())
 			{

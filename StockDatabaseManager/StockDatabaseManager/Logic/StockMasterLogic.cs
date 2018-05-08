@@ -186,7 +186,7 @@ namespace StockDatabaseManager.Logic
 			var masterList = excelList.GroupBy(x => x.Category17Code).Select(x => new IndustryCode17Master { Code = x.Key, Name = x.First().Category17Name });
 			masterList = masterList.Where(x => !string.IsNullOrEmpty(x.Code)).Where(x => !string.IsNullOrEmpty(x.Name)).ToList();
 
-			Db.IndustryCode17Master.AddRange(masterList);
+			Db.IndustryCode17Masters.AddRange(masterList);
 			await Db.SaveChangesAsync();
 		}
 
@@ -200,7 +200,7 @@ namespace StockDatabaseManager.Logic
 			var masterList = excelList.GroupBy(x => x.Category33Code).Select(x => new IndustryCode33Master { Code = x.Key, Name = x.First().Category33Name });
 			masterList = masterList.Where(x => !string.IsNullOrEmpty(x.Code)).Where(x => !string.IsNullOrEmpty(x.Name)).ToList();
 
-			Db.IndustryCode33Master.AddRange(masterList);
+			Db.IndustryCode33Masters.AddRange(masterList);
 			await Db.SaveChangesAsync();
 		}
 
@@ -214,7 +214,7 @@ namespace StockDatabaseManager.Logic
 			var masterList = excelList.GroupBy(x => x.ClassCode).Select(x => new ClassMaster { Code = x.Key, Name = x.First().ClassName });
 			masterList = masterList.Where(x => !string.IsNullOrEmpty(x.Code)).Where(x => !string.IsNullOrEmpty(x.Name)).ToList();
 
-			Db.ClassMaster.AddRange(masterList);
+			Db.ClassMasters.AddRange(masterList);
 			await Db.SaveChangesAsync();
 		}
 
@@ -255,7 +255,7 @@ namespace StockDatabaseManager.Logic
 				ClassCode = x.ClassCode
 			}).ToList();
 
-			Db.OldStockMaster.AddRange(moveList);
+			Db.OldStockMasters.AddRange(moveList);
 			Db.SaveChanges();
 
 			List<DeleteStockModel> result = moveList.Select(x => new DeleteStockModel { GuidKey = x.GuidKey,StockCode = x.StockCode}).ToList();

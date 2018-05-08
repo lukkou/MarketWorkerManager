@@ -100,7 +100,7 @@ namespace StockDatabaseManager.Logic
 			var utcFromTime = TimeZoneInfo.ConvertTimeToUtc(fromData);
 			var utcToTime = TimeZoneInfo.ConvertTimeToUtc(toData);
 
-			return Db.IndexCalendar.Where(x => x.ReleaseDateGmt >= utcFromTime && x.ReleaseDateGmt <= utcToTime).ToList();
+			return Db.IndexCalendars.Where(x => x.ReleaseDateGmt >= utcFromTime && x.ReleaseDateGmt <= utcToTime).ToList();
 		}
 
 		/// <summary>
@@ -205,14 +205,15 @@ namespace StockDatabaseManager.Logic
 		{
 			if (addFlg)
 			{
-				Db.IndexCalendar.AddRange(indexCalendars);
+				Db.IndexCalendars.AddRange(indexCalendars);
 				Db.SaveChanges();
 			}
 			else
 			{
 				foreach (IndexCalendar indexCalendar in indexCalendars)
 				{
-					Db.IndexCalendar.Attach(indexCalendar);
+					Db.IndexCalendars.Attach(indexCalendar);
+					Db.Entry(indexCalendar).State = EntityState.Modified;
 					Db.SaveChanges();
 				}
 			}
