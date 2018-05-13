@@ -15,8 +15,10 @@ namespace StockDatabaseManager
 				string deleteExecuteStatus = Console.ReadLine();
 				if(deleteExecuteStatus.ToUpper() == Define.RunStatus)
 				{
-					var firstTime = new FirstTimeController();
-					firstTime.Run();
+					using(FirstTimeController firstTime = new FirstTimeController())
+					{
+						firstTime.Run();
+					}
 				}
 			}
 			else
@@ -30,9 +32,11 @@ namespace StockDatabaseManager
 				}
 				else if (firstStatus == Define.FXStatus)
 				{
-					//FX用データ
-					var IndexCalendar = new IndexCalendarController();
-					IndexCalendar.Run();
+					using(IndexCalendarController IndexCalendar = new IndexCalendarController())
+					{
+						//FX用データ
+						IndexCalendar.Run();
+					}
 				}
 			}
 		}

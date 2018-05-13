@@ -25,6 +25,7 @@ namespace StockDatabaseManager.Controllers
 			}
 			catch (Exception e)
 			{
+				Logic.Rollback();
 				Log.Logger.Error(e.Message);
 				Log.Logger.Error(e.StackTrace);
 				if(e.InnerException != null)
@@ -32,6 +33,8 @@ namespace StockDatabaseManager.Controllers
 					Log.Logger.Error(e.InnerException.Message);
 					Log.Logger.Error(e.InnerException.StackTrace);
 				}
+				Console.WriteLine(e.Message);
+				Console.ReadKey();
 			}
 		}
 
@@ -55,7 +58,7 @@ namespace StockDatabaseManager.Controllers
 				yearList.AddRange(indexData);
 			}
 
-			Logic.IndexData.RegisteredIndexData(yearList);
+			Logic.IndexData.RegisteredIndexData(yearList,true);
 		}
 
 		/// <summary>

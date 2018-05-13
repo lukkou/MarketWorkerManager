@@ -10,7 +10,7 @@ using StockDatabaseManager.Context;
 namespace StockDatabaseManager.Controllers
 {
 
-	class BaseController
+	class BaseController : IDisposable
 	{
 		public LogicContext Logic { get; private set; }
 
@@ -72,6 +72,11 @@ namespace StockDatabaseManager.Controllers
 			//保存先を作成
 			result = myDocuments + Define.Stock.TokyoExchangeDirectory + "\\" + currentMonth;
 			return result;
+		}
+
+		public void Dispose()
+		{
+			Logic.Dispose();
 		}
 	}
 }

@@ -19,11 +19,10 @@ namespace StockDatabaseManager.Controllers
 			try
 			{
 				int nowDay = DateTime.Now.Day;
-
 				if (nowDay == 15)
 				{
 					//毎月15日に翌月データを取得する
-					MonthlyProcessing();
+					NextMonthlyProcessing();
 				}
 
 				DailyProcessing();
@@ -39,7 +38,7 @@ namespace StockDatabaseManager.Controllers
 		/// <summary>
 		/// 翌月の経済指標データの取得と登録
 		/// </summary>
-		private void MonthlyProcessing()
+		private void NextMonthlyProcessing()
 		{
 			string nextMonthStart = DateTime.Now.AddMonths(1).ToString("yyyy-MM") + "-01";
 			string nextMonthEnd = DateTime.Parse(DateTime.Now.AddMonths(2).ToString("yyyy-MM") + "-01 00:00:00").AddDays(-1).ToString("yyyy-MM-dd");
