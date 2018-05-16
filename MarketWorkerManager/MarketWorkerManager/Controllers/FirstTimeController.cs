@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 using MarketWorkerManager.Common;
+using MarketWorkerManager.Utility;
 using MarketWorkerManager.Models;
 using MarketWorkerManager.DataModels;
 
@@ -20,8 +19,11 @@ namespace MarketWorkerManager.Controllers
 			try
 			{
 				CreateDataBase();
+
+				Logic.BeginTransaction();
 				AddFirstIndexData();
 				AddFirstStockMasterData();
+				Logic.Commit();
 			}
 			catch (Exception e)
 			{
@@ -43,13 +45,20 @@ namespace MarketWorkerManager.Controllers
 		/// </summary>
 		private void AddFirstIndexData()
 		{
+			int nowDay = DateTime.Now.Day;
 			List<IndexCalendar> yearList = new List<IndexCalendar>();
-			//一年前から当月までの指標データを取得
-			for (int i = 0; i <= 12; i++)
+
+			//一年前から翌月までの指標データを取得
+			for (int i = -1; i <= 12; i++)
 			{
+				if (nowDay < 15 && i == -1)
+				{
+					continue;
+				}
+
 				string monthStart = DateTime.Now.AddMonths(i * -1).ToString("yyyy-MM") + "-01";
 				string monthEnd = DateTime.Parse(DateTime.Now.AddMonths(i * -1).AddMonths(1).ToString("yyyy-MM") + "-01 00:00:00").AddDays(-1).ToString("yyyy-MM-dd");
-
+				Console.WriteLine(Tools.ToConsoleString("Start data registration in {0} - {1}."), monthStart, monthEnd);
 				var task = Logic.IndexData.GetMql5JsonAsync(monthStart, monthEnd);
 				task.Wait();
 
@@ -59,6 +68,7 @@ namespace MarketWorkerManager.Controllers
 			}
 
 			Logic.IndexData.RegisteredIndexData(yearList, true);
+			Console.WriteLine(Tools.ToConsoleString("Completion of index data registration."));
 		}
 
 		/// <summary>
@@ -66,12 +76,14 @@ namespace MarketWorkerManager.Controllers
 		/// </summary>
 		private void AddFirstStockMasterData()
 		{
+			Console.WriteLine(Tools.ToConsoleString("Start of acquiring list of stocks of Tokyo Stock Exchange."));
 			ExcelDownload();
+			Console.WriteLine(Tools.ToConsoleString("Completion of stock list acquisition of Tokyo Stock Exchange."));
+
 			List<TokyoStockExchangeExcelModel> excelData = Logic.StockMaster.ExcelToDataModel(GetExcelSaveDirectory() + Define.Stock.TokyoExchangeExcel);
 			List<MarketMaster> marketList = Logic.StockMaster.ExcelModelToMarketModel(excelData);
 
-			Logic.BeginTransaction();
-
+			Console.WriteLine(Tools.ToConsoleString("Create master data."));
 			var addTasks = new[]
 			{
 					Logic.StockMaster.AddMarketMaster(marketList),
@@ -79,10 +91,10 @@ namespace MarketWorkerManager.Controllers
 					Logic.StockMaster.AddIndustryCode17(excelData),
 					Logic.StockMaster.AddIndustryCode33(excelData),
 					Logic.StockMaster.AddClass(excelData)
-				};
+			};
 
 			Task.WaitAll(addTasks);
-			Logic.Commit();
+			Console.WriteLine(Tools.ToConsoleString("Completion master data."));
 		}
 	}
 }

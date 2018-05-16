@@ -1,11 +1,9 @@
 ﻿using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 using MarketWorkerManager.Common;
+using MarketWorkerManager.Utility;
 using MarketWorkerManager.Context;
 
 namespace MarketWorkerManager.Controllers
@@ -25,7 +23,9 @@ namespace MarketWorkerManager.Controllers
 		/// </summary>
 		internal void CreateDataBase()
 		{
+			Console.WriteLine(Tools.ToConsoleString("Start database check."));
 			Logic.Base.CreateDatacase();
+			Console.WriteLine(Tools.ToConsoleString("Completion of database check."));
 		}
 
 		/// <summary>

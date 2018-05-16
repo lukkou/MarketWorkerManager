@@ -38,6 +38,16 @@ namespace MarketWorkerManager.Utility
 
 		#region テキスト操作
 		/// <summary>
+		/// コンソールに出力する文字列の作成
+		/// </summary>
+		/// <param name="val"></param>
+		/// <returns></returns>
+		public static string ToConsoleString(string val)
+		{
+			return ">>>" + DateTime.Now.ToString() + ":" + val;
+		}
+
+		/// <summary>
 		/// 東証より取得したExcelの値が-かをチェック
 		/// </summary>
 		/// <param name="str"></param>
