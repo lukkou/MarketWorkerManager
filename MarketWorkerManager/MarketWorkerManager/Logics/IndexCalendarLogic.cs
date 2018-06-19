@@ -198,6 +198,14 @@ namespace MarketWorkerManager.Logic
 			return results;
 		}
 
+		public Tuple<List<IndexCalendar>, List<IndexCalendar>> DuplicateDataExtraction()
+		{
+			List<IndexCalendar> nextIndexData = new List<IndexCalendar>();
+			List<IndexCalendar> nowIndexData = new List<IndexCalendar>();
+
+			return new Tuple<List<IndexCalendar>, List<IndexCalendar>>(nowIndexData, nextIndexData);
+		}
+
 		/// <summary>
 		/// 指標データを登録
 		/// </summary>
