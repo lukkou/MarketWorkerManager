@@ -18,6 +18,7 @@ namespace MarketWorkerManager.Controllers
 			try
 			{
 				int nowDay = DateTime.Now.Day;
+				//int nowDay = 15;
 				if (nowDay == 15)
 				{
 					//毎月15日に翌月データを取得する
@@ -50,7 +51,14 @@ namespace MarketWorkerManager.Controllers
 			List<IndexCalendar> jsonData = Logic.IndexData.ResponseBodyToEntityModel(task.Result);
 			List<IndexCalendar> indexData = Logic.IndexData.GetSpecifiedRangeIndex(jsonData, nextMonthStart, nextMonthEnd);
 
-			Logic.IndexData.RegisteredIndexData(indexData);
+			//当月で登録されているデータを取得
+			string nowMonthStart = DateTime.Now.ToString("yyyy-MM") + "-01";
+			string nowMonthEnd = DateTime.Parse(DateTime.Now.AddMonths(1).ToString("yyyy-MM") + "-01 00:00:00").AddDays(-1).ToString("yyyy-MM-dd");
+			List<IndexCalendar> nowMonthData = Logic.IndexData.GetRegisteredIndex(nowMonthStart, nowMonthEnd);
+			
+
+
+			Logic.IndexData.RegisteredIndexData(indexData,true);
 		}
 
 		/// <summary>
@@ -58,7 +66,7 @@ namespace MarketWorkerManager.Controllers
 		/// </summary>
 		private void DailyProcessing()
 		{
-			string currentMonthStart = DateTime.Now.ToString("yyyy-MM") + "-01";
+			string currentMonthStart = DateTime.Parse(DateTime.Now.ToString("yyyy-MM") + "-01 00:00:00").AddDays(-1).ToString("yyyy-MM-dd");
 			string nowDay = DateTime.Now.ToString("yyyy-MM-dd");
 
 			Log.Logger.Info(currentMonthStart + "-" + nowDay + "のデータ取得");

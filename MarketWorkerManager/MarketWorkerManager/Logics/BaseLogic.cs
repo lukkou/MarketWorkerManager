@@ -18,7 +18,7 @@ namespace MarketWorkerManager.Logic
 		/// </summary>
 		public void CreateDatacase()
 		{
-			bool createFlg = Db.Database.Exists();
+			bool createFlg = IsDatabaseExist();
 			if (createFlg)
 			{
 				try
@@ -26,7 +26,7 @@ namespace MarketWorkerManager.Logic
 					bool compatibleModelFlg = Db.Database.CompatibleWithModel(true);
 					if (!compatibleModelFlg)
 					{
-						//現在のモデルとデータベースのハッシュモデルが違った場合のみマイグレーションを実行
+						//現在のモデルとデータベースのハッシュモデルが違った場合マイグレーションを実行
 						//EFの罠 https://qiita.com/Kokudori/items/8f1889d4b5a66df434de
 						Db.Database.Initialize(true);
 					}
@@ -44,6 +44,36 @@ namespace MarketWorkerManager.Logic
 			{
 				Db.Database.Create();
 			}
+		}
+
+		/// <summary>
+		/// Databaseが存在するかの確認
+		/// </summary>
+		/// <returns></returns>
+		public bool IsDatabaseExist()
+		{
+			return Db.Database.Exists();
+		}
+
+		/// <summary>
+		/// データベースのモデルが変更になっているかの確認
+		/// </summary>
+		/// <returns></returns>
+		public bool IsCompatibleWithModel()
+		{
+			bool result = false;
+			try
+			{
+
+			}
+			catch (Exception)
+			{
+				//CompatibleWithModelがTrueの場合DB構造がEFモデルのメタデータがない場合例外がスローされる
+				//DBの削除と再構築を実施
+				//https://msdn.microsoft.com/ja-jp/library/gg679576(v=vs.113).aspx
+			}
+
+			return result;
 		}
 	}
 }
