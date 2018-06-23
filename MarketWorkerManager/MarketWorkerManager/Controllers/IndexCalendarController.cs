@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 using MarketWorkerManager.Common;
 using MarketWorkerManager.Models;
@@ -44,6 +42,8 @@ namespace MarketWorkerManager.Controllers
 			string nextMonthStart = DateTime.Now.AddMonths(1).ToString("yyyy-MM") + "-01";
 			string nextMonthEnd = DateTime.Parse(DateTime.Now.AddMonths(2).ToString("yyyy-MM") + "-01 00:00:00").AddDays(-1).ToString("yyyy-MM-dd");
 
+			Log.Logger.Info(nextMonthStart + "-" + nextMonthEnd + "のデータ取得");
+
 			var task = Logic.IndexData.GetMql5JsonAsync(nextMonthStart, nextMonthEnd);
 			task.Wait();
 
@@ -60,6 +60,8 @@ namespace MarketWorkerManager.Controllers
 		{
 			string currentMonthStart = DateTime.Now.ToString("yyyy-MM") + "-01";
 			string nowDay = DateTime.Now.ToString("yyyy-MM-dd");
+
+			Log.Logger.Info(currentMonthStart + "-" + nowDay + "のデータ取得");
 
 			var task = Logic.IndexData.GetMql5JsonAsync(currentMonthStart, nowDay);
 			task.Wait();
