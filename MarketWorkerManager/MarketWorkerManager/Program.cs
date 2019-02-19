@@ -10,7 +10,7 @@ namespace MarketWorkerManager
 		{
 			if (args.Length == 0)
 			{
-				Console.Write("初期データを作成しますか？ Y/N");
+				Console.Write("初期データを作成しますか？ Y/N：");
 				string deleteExecuteStatus = Console.ReadLine();
 				if (deleteExecuteStatus.ToUpper() == Define.RunStatus)
 				{

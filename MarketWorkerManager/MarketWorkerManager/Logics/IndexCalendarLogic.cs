@@ -146,6 +146,7 @@ namespace MarketWorkerManager.Logic
 						dbDetail.Processed = Define.Index.ProcessedOn;
 
 						results.Add(dbDetail);
+						Log.Logger.Info(dbDetail.GuidKey.ToString() + "の指標公開");
 					}
 					else if (string.IsNullOrEmpty(dbDetail.OldPreviousValue) && !string.IsNullOrEmpty(webDetail.OldPreviousValue))
 					{
@@ -154,6 +155,7 @@ namespace MarketWorkerManager.Logic
 						dbDetail.PreviousValue = webDetail.PreviousValue;
 
 						results.Add(dbDetail);
+						Log.Logger.Info(dbDetail.GuidKey.ToString() + "の過去データ更新");
 					}
 					else if (string.IsNullOrEmpty(dbDetail.ForecastValue) && !string.IsNullOrEmpty(webDetail.ForecastValue))
 					{
@@ -161,6 +163,7 @@ namespace MarketWorkerManager.Logic
 						dbDetail.ForecastValue = webDetail.ForecastValue;
 
 						results.Add(dbDetail);
+						Log.Logger.Info(dbDetail.GuidKey.ToString() + "の予測データ登録");
 					}
 				}
 				else
@@ -196,6 +199,14 @@ namespace MarketWorkerManager.Logic
 			}
 
 			return results;
+		}
+
+		public Tuple<List<IndexCalendar>, List<IndexCalendar>> DuplicateDataExtraction()
+		{
+			List<IndexCalendar> nextIndexData = new List<IndexCalendar>();
+			List<IndexCalendar> nowIndexData = new List<IndexCalendar>();
+
+			return new Tuple<List<IndexCalendar>, List<IndexCalendar>>(nowIndexData, nextIndexData);
 		}
 
 		/// <summary>

@@ -13,11 +13,6 @@ namespace RealtimeIndexImporter
 					indexImport.Run(args);
 				}
 			}
-			else
-			{
-
-			}
-
 		}
 	}
 }

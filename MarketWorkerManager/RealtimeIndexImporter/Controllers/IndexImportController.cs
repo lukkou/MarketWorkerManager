@@ -57,13 +57,12 @@ namespace RealtimeIndexImporter.Controllers
 					Logic.IndexCalendar.RegisteredIndexData(indexCalendarList);
 
 					//Twitterに投稿
-					//var tokens = Tokens.Create(Define.Tweeter.ConsumerKey,Define.Tweeter.ConsumerSecret,Define.Tweeter.AccessToken,Define.Tweeter.AccessSecret);
-					//for(int i = 0;i < indexCalendarList.Count; i++)
-					//{
-					//	string tweetText = string.Empty;
-					//	tweetText = tweetText + indexCalendarList[i].EventName + " 今回値→[" + indexCalendarList[i].ActualValue + "]  予想→[" + indexCalendarList[i].ForecastValue + "]  前回値→[" + indexCalendarList[i].PreviousValue + "]";
-					//	tokens.Statuses.Update(status => tweetText);
-					//}
+					var tokens = Tokens.Create(Define.Tweeter.ConsumerKey, Define.Tweeter.ConsumerSecret, Define.Tweeter.AccessToken, Define.Tweeter.AccessSecret);
+					for (int i = 0; i < indexCalendarList.Count; i++)
+					{
+						string tweetText = "[" + indexCalendarList[i].CurrencyCode + "]" + indexCalendarList[i].EventName + "\r\n今回値→[" + indexCalendarList[i].ActualValue + "]\r\n予想　→[" + indexCalendarList[i].ForecastValue + "]\r\n前回値→[" + indexCalendarList[i].PreviousValue + "]";
+						tokens.Statuses.Update(status => tweetText);
+					}
 					Logic.Commit();
 				}
 			}
