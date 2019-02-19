@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MarketWorkerManager.Models
 {
 	/// <summary>
-	/// 
+	/// 上場規模
 	/// </summary>
 	class ClassMaster
 	{
