@@ -22,9 +22,9 @@ namespace MarketWorkerManager.Models
 		/// 取引日
 		/// </summary>
 		[Key]
-		[Column("symbol", Order = 1)]
+		[Column("tradedatetime", Order = 1)]
 		[Display(Name = "取引時間")]
-		public DateTime Time { get; set; }
+		public DateTime TradeDateTime { get; set; }
 
 		/// <summary>
 		/// 取引時間軸

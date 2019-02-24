@@ -135,6 +135,10 @@
     <Compile Include="Migrations\201805141711589_init.Designer.cs">
       <DependentUpon>201805141711589_init.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201902241358143_timelineadd.cs" />
+    <Compile Include="Migrations\201902241358143_timelineadd.Designer.cs">
+      <DependentUpon>201902241358143_timelineadd.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CandleStick.cs" />
     <Compile Include="Models\ClassMaster.cs" />
@@ -164,6 +168,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201805141711589_init.resx">
       <DependentUpon>201805141711589_init.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201902241358143_timelineadd.resx">
+      <DependentUpon>201902241358143_timelineadd.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

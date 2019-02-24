@@ -28,6 +28,7 @@ namespace MarketWorkerManager.Context
 
 		#region FX
 		public DbSet<IndexCalendar> IndexCalendars { get; set; }
+		public DbSet<ExchangeTimeLine> ExchangeTimeLines { get; set; }
 		#endregion
 	}
 
