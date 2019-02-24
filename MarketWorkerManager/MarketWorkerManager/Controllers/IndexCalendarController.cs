@@ -18,7 +18,7 @@ namespace MarketWorkerManager.Controllers
 			try
 			{
 				int nowDay = DateTime.Now.Day;
-				//int nowDay = 15;
+				//nowDay = 15;
 				if (nowDay == 15)
 				{
 					//毎月15日に翌月データを取得する
