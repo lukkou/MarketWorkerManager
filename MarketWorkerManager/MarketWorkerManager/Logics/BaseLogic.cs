@@ -47,6 +47,16 @@ namespace MarketWorkerManager.Logic
 		}
 
 		/// <summary>
+		/// Databaseに接続か可能化の確認
+		/// </summary>
+		/// <returns></returns>
+		public bool IsDatabaseConnect()
+		{
+			Db.Database.Connection.Open(); 
+			return db.Database.Connection.State == ConnectionState.Open ? true : false;
+		}
+
+		/// <summary>
 		/// Databaseが存在するかの確認
 		/// </summary>
 		/// <returns></returns>

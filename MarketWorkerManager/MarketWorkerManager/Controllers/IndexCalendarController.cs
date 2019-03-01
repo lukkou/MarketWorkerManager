@@ -17,6 +17,13 @@ namespace MarketWorkerManager.Controllers
 		{
 			try
 			{
+				bool connectStatus = IsDatabaseConnectCheck();
+				if(!connectStatus)
+				{
+					//データベースに繋がらないことをツイッターに通知
+					return;
+				}
+
 				int nowDay = DateTime.Now.Day;
 				//nowDay = 15;
 				if (nowDay == 15)

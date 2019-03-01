@@ -19,6 +19,23 @@ namespace MarketWorkerManager.Controllers
 		}
 
 		/// <summary>
+		/// データベースに接続可能かのチェック
+		/// </summary>
+		internal bool IsDatabaseConnectCheck()
+		{
+			return Logic.Base.IsDatabaseConnect();
+		}
+
+		/// <summary>
+		/// データベースに接続できなかったことをツイッターで通知
+		/// </summary>
+		internal void DatabaseDisConnectNotice()
+		{
+
+		}
+
+
+		/// <summary>
 		/// データベースとテーブルの新規作成
 		/// </summary>
 		internal void CreateDataBase()
