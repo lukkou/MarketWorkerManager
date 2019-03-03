@@ -91,5 +91,16 @@ namespace MarketWorkerManager.Common
 			/// </summary>
 			public const int EventType_PublicHoliday = 2;
 		}
+
+		/// <summary>
+		/// Tweeter関連
+		/// </summary>
+		public class Tweeter
+		{
+			public const string ConsumerKey = "0t9p71eRVmaC2LQeLvfzoirW1";
+			public const string ConsumerSecret = "mKMqKpnWOaxdNmsMKpGCP3fVCAhT3IMnltgqrWs6WF5cEetrsN";
+			public const string AccessToken = "897014425856557056-b9RKh8QkJMw1B66En8ojxY93jh0LlU0";
+			public const string AccessSecret = "KSU3Qb2z7oF2vg9BQvbLmGGMAdMcHpgJF2zxCL4zlT1F3";
+		}
 	}
 }

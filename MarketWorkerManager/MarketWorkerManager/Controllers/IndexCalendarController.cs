@@ -18,15 +18,26 @@ namespace MarketWorkerManager.Controllers
 		{
 			try
 			{
+				int nowDay = DateTime.Now.Day;
 				bool connectStatus = IsDatabaseConnectCheck();
-				if(!connectStatus)
+				if (!connectStatus)
 				{
 					//データベースに繋がらないことをツイッターに通知
 					var tokens = Tokens.Create(Define.Tweeter.ConsumerKey, Define.Tweeter.ConsumerSecret, Define.Tweeter.AccessToken, Define.Tweeter.AccessSecret);
+
+					string tweetText = "@lukkou \r\n";
+					tweetText += DateTime.Now.ToString("yyyy/MM/dd hh:MM") + "MySQLへの接続失敗^；。；^ ";
+					tweetText += "MySQL Serverを起動してください。";
+					if (nowDay == 15)
+					{
+						tweetText += " \r\n15日に発生しました。翌月指標の取り込みが行われていません！！";
+					}
+
+					tokens.Statuses.Update(status => tweetText);
 					return;
 				}
 
-				int nowDay = DateTime.Now.Day;
+
 				//nowDay = 15;
 				if (nowDay == 15)
 				{
@@ -64,10 +75,10 @@ namespace MarketWorkerManager.Controllers
 			string nowMonthStart = DateTime.Now.ToString("yyyy-MM") + "-01";
 			string nowMonthEnd = DateTime.Parse(DateTime.Now.AddMonths(1).ToString("yyyy-MM") + "-01 00:00:00").AddDays(-1).ToString("yyyy-MM-dd");
 			List<IndexCalendar> nowMonthData = Logic.IndexData.GetRegisteredIndex(nowMonthStart, nowMonthEnd);
-			
 
 
-			Logic.IndexData.RegisteredIndexData(indexData,true);
+
+			Logic.IndexData.RegisteredIndexData(indexData, true);
 		}
 
 		/// <summary>

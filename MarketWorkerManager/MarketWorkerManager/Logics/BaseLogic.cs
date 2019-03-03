@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -52,8 +53,22 @@ namespace MarketWorkerManager.Logic
 		/// <returns></returns>
 		public bool IsDatabaseConnect()
 		{
-			Db.Database.Connection.Open(); 
-			return db.Database.Connection.State == ConnectionState.Open ? true : false;
+			bool result = false;
+
+			try
+			{
+				Db.Database.Connection.Open();
+				result = Db.Database.Connection.State == ConnectionState.Open ? true : false; ;
+			}
+			catch (Exception e)
+			{
+				if(e.Message != "Unable to connect to any of the specified MySQL hosts.")
+				{
+					throw e;
+				}
+			}
+
+			return result;
 		}
 
 		/// <summary>
