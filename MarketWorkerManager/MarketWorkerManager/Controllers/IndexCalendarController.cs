@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CoreTweet;
 
 using MarketWorkerManager.Common;
 using MarketWorkerManager.Models;
@@ -21,6 +22,7 @@ namespace MarketWorkerManager.Controllers
 				if(!connectStatus)
 				{
 					//データベースに繋がらないことをツイッターに通知
+					var tokens = Tokens.Create(Define.Tweeter.ConsumerKey, Define.Tweeter.ConsumerSecret, Define.Tweeter.AccessToken, Define.Tweeter.AccessSecret);
 					return;
 				}
 
