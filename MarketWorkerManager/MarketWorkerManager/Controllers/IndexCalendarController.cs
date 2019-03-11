@@ -26,7 +26,7 @@ namespace MarketWorkerManager.Controllers
 					var tokens = Tokens.Create(Define.Tweeter.ConsumerKey, Define.Tweeter.ConsumerSecret, Define.Tweeter.AccessToken, Define.Tweeter.AccessSecret);
 
 					string tweetText = "@lukkou \r\n";
-					tweetText += DateTime.Now.ToString("yyyy/MM/dd hh:MM") + "MySQLへの接続失敗^；。；^ ";
+					tweetText += DateTime.Now.ToString("yyyy/MM/dd hh:mm") + "MySQLへの接続失敗^；。；^ ";
 					tweetText += "MySQL Serverを起動してください。";
 					if (nowDay == 15)
 					{
