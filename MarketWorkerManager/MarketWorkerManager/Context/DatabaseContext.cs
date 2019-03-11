@@ -13,6 +13,7 @@ namespace MarketWorkerManager.Context
 		public DatabaseContext() : base("Database") { }
 
 		#region 共通
+		public DbSet<NotificationFlg> NotificationFlgs { get; set; }
 		#endregion
 
 		#region 株
