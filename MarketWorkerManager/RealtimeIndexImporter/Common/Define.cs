@@ -1,5 +1,4 @@
-﻿
-namespace RealtimeIndexImporter.Common
+﻿namespace RealtimeIndexImporter.Common
 {
 	public class Define
 	{
