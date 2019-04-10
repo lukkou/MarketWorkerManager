@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Data.Entity;
 
-using IndexNotification.Context;
 using IndexNotification.Common;
+using IndexNotification.Logics;
+using IndexNotification.Context;
 
 namespace IndexNotification.Context
 {
@@ -19,12 +20,27 @@ namespace IndexNotification.Context
         private DbContextTransaction tran { get; set; }
 
         /// <summary>
+        /// 経済指標ロジック
+        /// </summary>
+        public IndexCalendarLogic IndexCalendar { get; private set; }
+
+        /// <summary>
+        /// Twitterロジック
+        /// </summary>
+        public NotificationTweetLogic NotificationTweet { get; private set; }
+
+
+        /// <summary>
         /// LogicContext
         /// </summary>
         public LogicContext()
         {
             db = new DatabaseContext();
             db.Database.Log = AppendLog;
+
+            //各ロジックを生成
+            IndexCalendar = new IndexCalendarLogic{Db = this.db};
+            NotificationTweet = new NotificationTweetLogic();
         }
 
         /// <summary>

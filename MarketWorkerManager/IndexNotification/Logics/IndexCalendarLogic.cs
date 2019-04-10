@@ -62,7 +62,7 @@ namespace IndexNotification.Logics
                 NotificationFlg addItem = new NotificationFlg();
                 addItem.GuidKey = item.GuidKey;
                 addItem.IdKey = item.IdKey;
-                addItem.TweetFlg = true;
+                addItem.TweetFlg = false;
 
                 addList.Add(addItem);
             }

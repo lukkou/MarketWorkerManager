@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
+using IndexNotification.Common;
+using IndexNotification.Models;
 
 namespace IndexNotification.Controllers
 {
@@ -14,7 +15,13 @@ namespace IndexNotification.Controllers
         {
             try
             {
+                Logic.BeginTransaction();
 
+                List<IndexCalendar> indexCalendarList = Logic.IndexCalendar.GetIndexCalendarInfo();
+                Logic.NotificationTweet.IndexNotificationTweet(indexCalendarList);
+
+                Logic.IndexCalendarLogic.AddTweetFlg(indexCalendarList);
+                Logic.Commit();
             }
             catch (Exception e)
             {
@@ -27,7 +34,6 @@ namespace IndexNotification.Controllers
                     Log.Logger.Error(e.InnerException.StackTrace);
                 }
             }
-
         }
     }
 }
