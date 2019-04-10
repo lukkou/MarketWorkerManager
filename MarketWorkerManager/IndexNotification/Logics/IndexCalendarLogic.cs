@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using IndexNotification.Common;
 using IndexNotification.Models;
 using IndexNotification.Context;
 
@@ -25,7 +26,8 @@ namespace IndexNotification.Logics
 
             result = Db.IndexCalendars.Where(
                                         x => x.MyReleaseDate >= before && 
-                                        x.MyReleaseDate <= after).ToList();
+                                        x.MyReleaseDate <= after && 
+                                        x.Importance == Define.ImportanceHigh).ToList();
 
             if (result.Any())
             {
@@ -54,7 +56,18 @@ namespace IndexNotification.Logics
         /// <param name="list"></param>
         public void AddTweetFlg(List<IndexCalendar> list)
         {
+            List<NotificationFlg> addList = new List<NotificationFlg>();
+            foreach(IndexCalendar item in list)
+            {
+                NotificationFlg addItem = new NotificationFlg();
+                addItem.GuidKey = item.GuidKey;
+                addItem.IdKey = item.IdKey;
+                addItem.TweetFlg = true;
 
+                addList.Add(addItem);
+            }
+
+            Db.NotificationFlgs.AddRange(addList);
         }
     }
 }

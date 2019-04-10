@@ -9,74 +9,76 @@ using RealtimeIndexImporter.Models;
 
 namespace RealtimeIndexImporter.Controllers
 {
-	class IndexImportController : BaseController
-	{
-		public void Run(string[] guidList)
-		{
-			try
-			{
-				List<IndexCalendar> indexCalendarList = new List<IndexCalendar>();
+    class IndexImportController : BaseController
+    {
+        public void Run(string[] guidList)
+        {
+            try
+            {
+                List<IndexCalendar> indexCalendarList = new List<IndexCalendar>();
 
-				DateTime afterFiveMinutes = DateTime.Now.AddMinutes(5);
+                DateTime afterFiveMinutes = DateTime.Now.AddMinutes(5);
 
-				//必要な指標が全て揃うか5分経つまでデータを取得し続ける
-				while (true)
-				{
-					for (int i = 0; i <= guidList.Length - 1; i++)
-					{
-						if (!indexCalendarList.Any(x => x.GuidKey == Guid.Parse(guidList[i])))
-						{
-							var task = Logic.IndexCalendar.GetMql5JsonAsync();
-							task.Wait();
+                //現在の時刻の重要度
 
-							IndexCalendar myData = Logic.IndexCalendar.GetMyIndexData(guidList[i]);
-							IndexCalendar webData = Logic.IndexCalendar.ResponseBodyToEntityModel(task.Result, myData.IdKey);
-							if (webData == null)
-							{
-								continue;
-							}
+                //必要な指標が全て揃うか5分経つまでデータを取得し続ける
+                while (true)
+                {
+                    for (int i = 0; i <= guidList.Length - 1; i++)
+                    {
+                        if (!indexCalendarList.Any(x => x.GuidKey == Guid.Parse(guidList[i])))
+                        {
+                            var task = Logic.IndexCalendar.GetMql5JsonAsync();
+                            task.Wait();
 
-							IndexCalendar indexData = Logic.IndexCalendar.MergeMyDataToNowData(myData, webData);
+                            IndexCalendar myData = Logic.IndexCalendar.GetMyIndexData(guidList[i]);
+                            IndexCalendar webData = Logic.IndexCalendar.ResponseBodyToEntityModel(task.Result, myData.IdKey);
+                            if (webData == null)
+                            {
+                                continue;
+                            }
 
-							indexCalendarList.Add(indexData);
-						}
-					}
+                            IndexCalendar indexData = Logic.IndexCalendar.MergeMyDataToNowData(myData, webData);
 
-					if (indexCalendarList.Count == guidList.Length || afterFiveMinutes <= DateTime.Now)
-					{
-						break;
-					}
+                            indexCalendarList.Add(indexData);
+                        }
+                    }
 
-					//リクエストを投げ続けないために30秒待機
-					Thread.Sleep(300000);
-				}
+                    if (indexCalendarList.Count == guidList.Length || afterFiveMinutes <= DateTime.Now)
+                    {
+                        break;
+                    }
 
-				if (indexCalendarList.Count > 0)
-				{
-					Logic.BeginTransaction();
-					Logic.IndexCalendar.RegisteredIndexData(indexCalendarList);
+                    //リクエストを投げ続けないために30秒待機
+                    Thread.Sleep(300000);
+                }
 
-					//Twitterに投稿
-					var tokens = Tokens.Create(Define.Tweeter.ConsumerKey, Define.Tweeter.ConsumerSecret, Define.Tweeter.AccessToken, Define.Tweeter.AccessSecret);
-					for (int i = 0; i < indexCalendarList.Count; i++)
-					{
-						string tweetText = "[" + indexCalendarList[i].CurrencyCode + "]" + indexCalendarList[i].EventName + "\r\n今回値→[" + indexCalendarList[i].ActualValue + "]\r\n予想　→[" + indexCalendarList[i].ForecastValue + "]\r\n前回値→[" + indexCalendarList[i].PreviousValue + "]";
-						tokens.Statuses.Update(status => tweetText);
-					}
-					Logic.Commit();
-				}
-			}
-			catch (Exception e)
-			{
-				Logic.Rollback();
-				Log.Logger.Error(e.Message);
-				Log.Logger.Error(e.StackTrace);
-				if (e.InnerException != null)
-				{
-					Log.Logger.Error(e.InnerException.Message);
-					Log.Logger.Error(e.InnerException.StackTrace);
-				}
-			}
-		}
-	}
+                if (indexCalendarList.Count > 0)
+                {
+                    Logic.BeginTransaction();
+                    Logic.IndexCalendar.RegisteredIndexData(indexCalendarList);
+
+                    //Twitterに投稿
+                    var tokens = Tokens.Create(Define.Tweeter.ConsumerKey, Define.Tweeter.ConsumerSecret, Define.Tweeter.AccessToken, Define.Tweeter.AccessSecret);
+                    for (int i = 0; i < indexCalendarList.Count; i++)
+                    {
+                        string tweetText = "[" + indexCalendarList[i].CurrencyCode + "]" + indexCalendarList[i].EventName + "\r\n今回値→[" + indexCalendarList[i].ActualValue + "]\r\n予想　→[" + indexCalendarList[i].ForecastValue + "]\r\n前回値→[" + indexCalendarList[i].PreviousValue + "]";
+                        tokens.Statuses.Update(status => tweetText);
+                    }
+                    Logic.Commit();
+                }
+            }
+            catch (Exception e)
+            {
+                Logic.Rollback();
+                Log.Logger.Error(e.Message);
+                Log.Logger.Error(e.StackTrace);
+                if (e.InnerException != null)
+                {
+                    Log.Logger.Error(e.InnerException.Message);
+                    Log.Logger.Error(e.InnerException.StackTrace);
+                }
+            }
+        }
+    }
 }
