@@ -2,7 +2,7 @@
 
 using IndexNotification.Context;
 
-namespace IndexNotification.Controllers
+namespace IndexNotification.Controller
 {
     class BaseController : IDisposable
     {

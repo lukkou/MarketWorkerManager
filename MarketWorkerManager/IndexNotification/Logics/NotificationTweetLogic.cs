@@ -9,12 +9,12 @@ using IndexNotification.Common;
 using IndexNotification.Models;
 using IndexNotification.Context;
 
-namespace IndexNotification.Logics
+namespace IndexNotification.Logic
 {
     class NotificationTweetLogic
     {
         /// <summary>
-        /// 指標発表一時間前情報をツイート
+        /// 指標発表30分前情報をツイート
         /// </summary>
         /// <param name="list"></param>
         public void IndexNotificationTweet(List<IndexCalendar> list)
@@ -23,11 +23,11 @@ namespace IndexNotification.Logics
             for (int i = 0; i < list.Count; i++)
             {
                 //ツイート文を作成
-                string tweetText = "@lukkou\r\n";
-                tweetText += "30分後に[" + list[i].EventName + "]の発表\r\n";
-                tweetText += "対象通貨[" + list[i].CurrencyCode + "]\r\n";
-                tweetText += "前回値→[" + list[i].PreviousValue + "]\r\n";
-                tweetText += "予想値→[" + list[i].ForecastValue + "]";
+                string tweetText = string.Empty;
+                tweetText += "ーーー30分後に[" + list[i].EventName + "]の発表ーーー\r\n";
+                tweetText += "通貨　[" + list[i].CurrencyCode + "]\r\n";
+                tweetText += "予想値[" + list[i].ForecastValue + "]\r\n";
+                tweetText += "前回値[" + list[i].PreviousValue + "]";
 
                 tokens.Statuses.Update(status => tweetText);
             }

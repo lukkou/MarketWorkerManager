@@ -6,7 +6,7 @@ using IndexNotification.Common;
 using IndexNotification.Models;
 using IndexNotification.Context;
 
-namespace IndexNotification.Logics
+namespace IndexNotification.Logic
 {
     class IndexCalendarLogic
     {
@@ -68,6 +68,7 @@ namespace IndexNotification.Logics
             }
 
             Db.NotificationFlgs.AddRange(addList);
+            Db.SaveChanges();
         }
     }
 }

@@ -1,13 +1,12 @@
 ﻿using System;
+using System.Threading;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using IndexNotification.Common;
 using IndexNotification.Models;
 
-namespace IndexNotification.Controllers
+namespace IndexNotification.Controller
 {
     class TweetIndexNotificationController : BaseController
     {
@@ -15,13 +14,23 @@ namespace IndexNotification.Controllers
         {
             try
             {
-                Logic.BeginTransaction();
-
                 List<IndexCalendar> indexCalendarList = Logic.IndexCalendar.GetIndexCalendarInfo();
-                Logic.NotificationTweet.IndexNotificationTweet(indexCalendarList);
 
-                Logic.IndexCalendarLogic.AddTweetFlg(indexCalendarList);
-                Logic.Commit();
+                if (indexCalendarList.Any())
+                {
+                    Logic.BeginTransaction();
+
+                    //ツイッターに指標発表前のお知らせ
+                    Logic.NotificationTweet.IndexNotificationTweet(indexCalendarList);
+
+                    //お知らせレコード登録
+                    Logic.IndexCalendar.AddTweetFlg(indexCalendarList);
+                    Logic.Commit();
+                }else
+                {
+                    //データが無い場合は１分止める
+                    Thread.Sleep(600000);
+                }
             }
             catch (Exception e)
             {

@@ -2,7 +2,7 @@
 using System.Data.Entity;
 
 using IndexNotification.Common;
-using IndexNotification.Logics;
+using IndexNotification.Logic;
 using IndexNotification.Context;
 
 namespace IndexNotification.Context

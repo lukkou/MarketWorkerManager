@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using IndexNotification.Controller;
 
 namespace IndexNotification
 {
@@ -10,6 +7,23 @@ namespace IndexNotification
     {
         static void Main(string[] args)
         {
+            using(TweetIndexNotificationController tweetIndexNotification = new TweetIndexNotificationController())
+            {
+                Console.WriteLine("Eをクリックすると止まります");
+                while (true)
+                {
+                    tweetIndexNotification.Run();
+
+                    if (Console.KeyAvailable)
+                    {
+                        string inputKey = Console.ReadKey().Key.ToString();
+                        if (inputKey == "E")
+                        {
+                            return;
+                        }
+                    }
+                }
+            }
         }
     }
 }
