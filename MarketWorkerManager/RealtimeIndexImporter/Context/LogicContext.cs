@@ -34,6 +34,11 @@ namespace RealtimeIndexImporter.Context
         public IndexCalendarLogic IndexCalendar { get; private set; }
 
         /// <summary>
+        /// ツイート用ロジック
+        /// </summary>
+        public PublicInformationTweetLogic PublicInformationTweet { get; private set; }
+
+        /// <summary>
         /// LogicContext
         /// </summary>
         public LogicContext()
@@ -43,6 +48,7 @@ namespace RealtimeIndexImporter.Context
             client = new HttpClient();
 
             IndexCalendar = new IndexCalendarLogic { Db = this.db, Client = this.client };
+            PublicInformationTweet = new PublicInformationTweetLogic();
         }
 
         /// <summary>

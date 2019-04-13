@@ -9,6 +9,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+
 using RealtimeIndexImporter.Common;
 using RealtimeIndexImporter.Models;
 using RealtimeIndexImporter.Context;
@@ -22,6 +23,47 @@ namespace RealtimeIndexImporter.Logic
         public DatabaseContext Db { get; set; }
 
         public HttpClient Client { get; set; }
+
+        /// <summary>
+        /// 現在の時刻から前後１分の経済指標（重要度HIGH）を取得
+        /// </summary>
+        /// <returns></returns>
+        public List<IndexCalendar> GetIndexInfo()
+        {
+            List<IndexCalendar> result = new List<IndexCalendar>();
+
+            DateTime before = DateTime.Now.AddMinutes(-1);
+            DateTime after = DateTime.Now.AddMinutes(1);
+
+            result = Db.IndexCalendars.Where(
+                                        x => x.MyReleaseDate >= before &&
+                                        x.MyReleaseDate <= after &&
+                                        x.Importance == Define.ImportanceHigh).ToList();
+
+            return result;
+        }
+
+
+        /// <summary>
+        /// 指標データの内すでにつぶやき済みのデータを削除
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public List<IndexCalendar> RemoveAlreadyInfo(List<IndexCalendar> list)
+        {
+            List<IndexCalendar> result = list;
+
+            foreach (IndexCalendar item in list)
+            {
+                NotificationFlg flgData = Db.NotificationFlgs.Where(x => x.GuidKey == item.GuidKey && x.TweetFlg == true).FirstOrDefault();
+                if(flgData != null)
+                {
+                    result.Remove(item);
+                }
+            }
+
+            return result;
+        }
 
         /// <summary>
         /// 現在時刻の前後1時間の指標データを取得
@@ -115,22 +157,42 @@ namespace RealtimeIndexImporter.Logic
         /// </summary>
         /// <param name="guid"></param>
         /// <returns></returns>
-        public IndexCalendar GetMyIndexData(string guid)
+        public IndexCalendar GetMyIndexData(Guid guid)
         {
-            var myGuid = Guid.Parse(guid);
-            return Db.IndexCalendars.Where(x => x.GuidKey == myGuid).FirstOrDefault();
+            return Db.IndexCalendars.Where(x => x.GuidKey == guid).FirstOrDefault();
         }
 
         /// <summary>
         /// 指標データを上書き
         /// </summary>
         /// <param name="data"></param>
-        public void RegisteredIndexData(List<IndexCalendar> indexCalendars)
+        public void RegisteredIndexData(List<IndexCalendar> list)
         {
-            foreach (IndexCalendar indexCalendar in indexCalendars)
+            foreach (IndexCalendar item in list)
             {
-                Db.IndexCalendars.Attach(indexCalendar);
-                Db.Entry(indexCalendar).State = EntityState.Modified;
+                Db.IndexCalendars.Attach(item);
+                Db.Entry(item).State = EntityState.Modified;
+                Db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 指標公開ツイートフラグ更新
+        /// </summary>
+        /// <param name="list"></param>
+        public void RegisteredUpdateFlg(List<IndexCalendar> list)
+        {
+            foreach (IndexCalendar item in list)
+            {
+                NotificationFlg updateInfo = new NotificationFlg
+                {
+                    GuidKey = item.GuidKey,
+                    IdKey = item.IdKey,
+                    TweetFlg = true
+                };
+
+                Db.NotificationFlgs.Attach(updateInfo);
+                Db.Entry(updateInfo).State = EntityState.Modified;
                 Db.SaveChanges();
             }
         }

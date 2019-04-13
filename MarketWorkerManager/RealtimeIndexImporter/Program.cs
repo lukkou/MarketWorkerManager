@@ -1,4 +1,5 @@
-﻿using RealtimeIndexImporter.Controllers;
+﻿using System;
+using RealtimeIndexImporter.Controller;
 
 namespace RealtimeIndexImporter
 {
@@ -6,13 +7,24 @@ namespace RealtimeIndexImporter
     {
         static void Main(string[] args)
         {
-            if (args.Length != 0)
+            using (IndexImportController indexImport = new IndexImportController())
             {
-                using (IndexImportController indexImport = new IndexImportController())
+                Console.WriteLine("Eをクリックすると止まります");
+                while (true)
                 {
-                    indexImport.Run(args);
+                    indexImport.Run();
+
+                    if (Console.KeyAvailable)
+                    {
+                        string inputKey = Console.ReadKey().Key.ToString();
+                        if (inputKey == "E")
+                        {
+                            return;
+                        }
+                    }
                 }
             }
         }
     }
 }
+

@@ -1,7 +1,7 @@
 ﻿using System;
 using RealtimeIndexImporter.Context;
 
-namespace RealtimeIndexImporter.Controllers
+namespace RealtimeIndexImporter.Controller
 {
     class BaseController : IDisposable
     {

@@ -111,7 +111,9 @@
     <Compile Include="Controllers\IndexImportController.cs" />
     <Compile Include="DynamicJson.cs" />
     <Compile Include="Logics\IndexCalendarLogic.cs" />
+    <Compile Include="Logics\PublicInformationTweetLogic.cs" />
     <Compile Include="Models\IndexCalendar.cs" />
+    <Compile Include="Models\NotificationFlg.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

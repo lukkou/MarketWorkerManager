@@ -2,70 +2,63 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using CoreTweet;
 
 using RealtimeIndexImporter.Common;
 using RealtimeIndexImporter.Models;
 
-namespace RealtimeIndexImporter.Controllers
+namespace RealtimeIndexImporter.Controller
 {
     class IndexImportController : BaseController
     {
-        public void Run(string[] guidList)
+        public void Run()
         {
             try
             {
-                List<IndexCalendar> indexCalendarList = new List<IndexCalendar>();
+                List<IndexCalendar> indexCalendarList = Logic.IndexCalendar.GetIndexInfo();
+                indexCalendarList = Logic.IndexCalendar.RemoveAlreadyInfo(indexCalendarList);
+                List<IndexCalendar> tweetData = new List<IndexCalendar>();
 
-                DateTime afterFiveMinutes = DateTime.Now.AddMinutes(5);
-
-                //現在の時刻の重要度
-
-                //必要な指標が全て揃うか5分経つまでデータを取得し続ける
-                while (true)
+                if (indexCalendarList.Any())
                 {
-                    for (int i = 0; i <= guidList.Length - 1; i++)
+                    //５分先の時刻を取得
+                    DateTime afterFiveMinutes = DateTime.Now.AddMinutes(5);
+
+                    foreach (IndexCalendar item in indexCalendarList)
                     {
-                        if (!indexCalendarList.Any(x => x.GuidKey == Guid.Parse(guidList[i])))
+                        while (true)
                         {
                             var task = Logic.IndexCalendar.GetMql5JsonAsync();
                             task.Wait();
 
-                            IndexCalendar myData = Logic.IndexCalendar.GetMyIndexData(guidList[i]);
-                            IndexCalendar webData = Logic.IndexCalendar.ResponseBodyToEntityModel(task.Result, myData.IdKey);
+                            IndexCalendar webData = Logic.IndexCalendar.ResponseBodyToEntityModel(task.Result, item.IdKey);
                             if (webData == null)
                             {
+                                //リクエストを投げ続けないために30秒待機
+                                Thread.Sleep(300000);
                                 continue;
                             }
 
-                            IndexCalendar indexData = Logic.IndexCalendar.MergeMyDataToNowData(myData, webData);
-
-                            indexCalendarList.Add(indexData);
+                            IndexCalendar margeData = Logic.IndexCalendar.MergeMyDataToNowData(item, webData);
+                            tweetData.Add(margeData);
+                            break;
                         }
                     }
 
-                    if (indexCalendarList.Count == guidList.Length || afterFiveMinutes <= DateTime.Now)
-                    {
-                        break;
-                    }
-
-                    //リクエストを投げ続けないために30秒待機
-                    Thread.Sleep(300000);
-                }
-
-                if (indexCalendarList.Count > 0)
-                {
                     Logic.BeginTransaction();
-                    Logic.IndexCalendar.RegisteredIndexData(indexCalendarList);
 
-                    //Twitterに投稿
-                    var tokens = Tokens.Create(Define.Tweeter.ConsumerKey, Define.Tweeter.ConsumerSecret, Define.Tweeter.AccessToken, Define.Tweeter.AccessSecret);
-                    for (int i = 0; i < indexCalendarList.Count; i++)
-                    {
-                        string tweetText = "[" + indexCalendarList[i].CurrencyCode + "]" + indexCalendarList[i].EventName + "\r\n今回値→[" + indexCalendarList[i].ActualValue + "]\r\n予想　→[" + indexCalendarList[i].ForecastValue + "]\r\n前回値→[" + indexCalendarList[i].PreviousValue + "]";
-                        tokens.Statuses.Update(status => tweetText);
-                    }
+                    //Tweet
+                    Logic.PublicInformationTweet.PublicInformationTweet(tweetData);
+
+                    //指標データを更新
+                    Logic.IndexCalendar.RegisteredIndexData(tweetData);
+                    Logic.IndexCalendar.RegisteredUpdateFlg(tweetData);
+
                     Logic.Commit();
+
+                }else
+                {
+                    //データが無い場合は１分止める
+                    Thread.Sleep(600000);
                 }
             }
             catch (Exception e)

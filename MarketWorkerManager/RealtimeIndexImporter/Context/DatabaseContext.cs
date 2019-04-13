@@ -1,9 +1,10 @@
 ﻿using System.Data.Common;
 using System.Data.Entity;
 using System.Data.Entity.Migrations.History;
-using RealtimeIndexImporter.Models;
 using MySql.Data.Entity;
 using MySql.Data.MySqlClient;
+
+using RealtimeIndexImporter.Models;
 
 namespace RealtimeIndexImporter.Context
 {
@@ -12,6 +13,7 @@ namespace RealtimeIndexImporter.Context
         public DatabaseContext() : base("Database") { }
 
         public DbSet<IndexCalendar> IndexCalendars { get; set; }
+        public DbSet<NotificationFlg> NotificationFlgs { get; set; }
     }
 
     public class MysqlConfiguration : DbConfiguration
