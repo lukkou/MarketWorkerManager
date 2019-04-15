@@ -13,7 +13,7 @@ namespace IndexNotification.Logic
         public DatabaseContext Db { get; set; }
 
         /// <summary>
-        /// 現在時刻から一時間後に発表される指標を取得する
+        /// 現在時刻から30分後に発表される指標を取得する
         /// 一分ごとに動作させるため分で取得情報を決め打ちして良い
         /// </summary>
         /// <returns></returns>
@@ -21,13 +21,14 @@ namespace IndexNotification.Logic
         {
             List<IndexCalendar> result = new List<IndexCalendar>();
 
-            DateTime before = DateTime.Now.AddMinutes(29);
-            DateTime after = DateTime.Now.AddMinutes(31);
+            DateTime before = DateTime.Now.AddMinutes(27);
+            DateTime after = DateTime.Now.AddMinutes(30);
 
             result = Db.IndexCalendars.Where(
-                                        x => x.MyReleaseDate >= before && 
-                                        x.MyReleaseDate <= after && 
-                                        x.Importance == Define.ImportanceHigh).ToList();
+                                        x => x.MyReleaseDate >= before &&
+                                        x.MyReleaseDate <= after &&
+                                        x.Importance == Define.ImportanceHigh &&
+                                        x.TimeMode == Define.TimeModeIndexInfo).ToList();
 
             if (result.Any())
             {

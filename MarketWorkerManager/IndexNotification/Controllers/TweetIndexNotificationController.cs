@@ -28,8 +28,8 @@ namespace IndexNotification.Controller
                     Logic.Commit();
                 }else
                 {
-                    //データが無い場合は１分止める
-                    Thread.Sleep(600000);
+                    //データが無い場合は30秒止める
+                    Thread.Sleep(30000);
                 }
             }
             catch (Exception e)
@@ -37,6 +37,7 @@ namespace IndexNotification.Controller
                 Logic.Rollback();
                 Log.Logger.Error(e.Message);
                 Log.Logger.Error(e.StackTrace);
+                Console.WriteLine(e.Message);
                 if (e.InnerException != null)
                 {
                     Log.Logger.Error(e.InnerException.Message);

@@ -24,6 +24,7 @@ namespace IndexNotification.Logic
             {
                 //ツイート文を作成
                 string tweetText = string.Empty;
+                tweetText += "@lukkou";
                 tweetText += "ーーー30分後に[" + list[i].EventName + "]の発表ーーー\r\n";
                 tweetText += "通貨　[" + list[i].CurrencyCode + "]\r\n";
                 tweetText += "予想値[" + list[i].ForecastValue + "]\r\n";

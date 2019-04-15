@@ -33,6 +33,11 @@
         public const string TimeModeUTC = "0";
 
         /// <summary>
+        /// 指標発表のタイムモード
+        /// </summary>
+        public const string TimeModeIndexInfo = "0";
+
+        /// <summary>
         /// Tweeter関連
         /// </summary>
         public class Tweeter

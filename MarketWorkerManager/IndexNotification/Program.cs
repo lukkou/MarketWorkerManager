@@ -9,7 +9,7 @@ namespace IndexNotification
         {
             using(TweetIndexNotificationController tweetIndexNotification = new TweetIndexNotificationController())
             {
-                Console.WriteLine("Eをクリックすると止まります");
+                Console.WriteLine("指標発表30分前通知exe\r\nEをクリックすると止まります");
                 while (true)
                 {
                     tweetIndexNotification.Run();
