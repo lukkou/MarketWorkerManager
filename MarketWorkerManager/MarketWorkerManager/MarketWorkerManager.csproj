@@ -33,10 +33,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CoreTweet, Version=0.9.0.415, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CoreTweet.0.9.0.415\lib\net45\CoreTweet.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
       <Private>True</Private>
@@ -143,6 +139,10 @@
     <Compile Include="Migrations\201902241358143_timelineadd.Designer.cs">
       <DependentUpon>201902241358143_timelineadd.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201904151212344_FlgTableAdd.cs" />
+    <Compile Include="Migrations\201904151212344_FlgTableAdd.Designer.cs">
+      <DependentUpon>201904151212344_FlgTableAdd.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CandleStick.cs" />
     <Compile Include="Models\ClassMaster.cs" />
@@ -176,6 +176,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201902241358143_timelineadd.resx">
       <DependentUpon>201902241358143_timelineadd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904151212344_FlgTableAdd.resx">
+      <DependentUpon>201904151212344_FlgTableAdd.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
