@@ -25,20 +25,21 @@ namespace RealtimeIndexImporter.Logic
         public HttpClient Client { get; set; }
 
         /// <summary>
-        /// 現在の時刻から前後１分の経済指標（重要度HIGH）を取得
+        /// 現在の時刻から前後5分の経済指標（重要度HIGH）を取得
         /// </summary>
         /// <returns></returns>
         public List<IndexCalendar> GetIndexInfo()
         {
             List<IndexCalendar> result = new List<IndexCalendar>();
 
-            DateTime before = DateTime.Now.AddMinutes(-1);
-            DateTime after = DateTime.Now.AddMinutes(1);
+            DateTime before = DateTime.Now.AddMinutes(-5);
+            DateTime after = DateTime.Now.AddMinutes(0);
 
             result = Db.IndexCalendars.Where(
                                         x => x.MyReleaseDate >= before &&
                                         x.MyReleaseDate <= after &&
-                                        x.Importance == Define.ImportanceHigh).ToList();
+                                        x.Importance == Define.ImportanceHigh &&
+                                        x.TimeMode == Define.TimeModeIndexInfo).ToList();
 
             return result;
         }
@@ -51,7 +52,7 @@ namespace RealtimeIndexImporter.Logic
         /// <returns></returns>
         public List<IndexCalendar> RemoveAlreadyInfo(List<IndexCalendar> list)
         {
-            List<IndexCalendar> result = list;
+            List<IndexCalendar> result = new List<IndexCalendar>(list);
 
             foreach (IndexCalendar item in list)
             {
@@ -147,6 +148,7 @@ namespace RealtimeIndexImporter.Logic
         {
             IndexCalendar result = myData;
             result.Processed = webData.Processed;
+            result.PreviousValue = webData.PreviousValue;
             result.ActualValue = webData.ActualValue;
 
             return result;

@@ -31,10 +31,10 @@ namespace RealtimeIndexImporter.Controller
                             task.Wait();
 
                             IndexCalendar webData = Logic.IndexCalendar.ResponseBodyToEntityModel(task.Result, item.IdKey);
-                            if (webData == null)
+                            if (webData == null || string.IsNullOrEmpty(webData.ActualValue))
                             {
-                                //リクエストを投げ続けないために30秒待機
-                                Thread.Sleep(300000);
+                                //リクエストを投げ続けないために10秒待機
+                                Thread.Sleep(10000);
                                 continue;
                             }
 
@@ -57,8 +57,8 @@ namespace RealtimeIndexImporter.Controller
 
                 }else
                 {
-                    //データが無い場合は１分止める
-                    Thread.Sleep(600000);
+                    //データが無い場合は30秒止める
+                    Thread.Sleep(30000);
                 }
             }
             catch (Exception e)
@@ -66,6 +66,7 @@ namespace RealtimeIndexImporter.Controller
                 Logic.Rollback();
                 Log.Logger.Error(e.Message);
                 Log.Logger.Error(e.StackTrace);
+                Console.WriteLine(e.Message);
                 if (e.InnerException != null)
                 {
                     Log.Logger.Error(e.InnerException.Message);
