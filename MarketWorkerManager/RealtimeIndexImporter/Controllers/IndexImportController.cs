@@ -57,8 +57,8 @@ namespace RealtimeIndexImporter.Controller
 
                 }else
                 {
-                    //データが無い場合は30秒止める
-                    Thread.Sleep(30000);
+                    //データが無い場合は60秒止める
+                    Thread.Sleep(60000);
                 }
             }
             catch (Exception e)
