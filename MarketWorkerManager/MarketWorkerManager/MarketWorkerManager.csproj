@@ -33,6 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CoreTweet, Version=1.0.0.483, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CoreTweet.1.0.0.483\lib\net45\CoreTweet.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
       <Private>True</Private>
@@ -143,6 +147,10 @@
     <Compile Include="Migrations\201904151212344_FlgTableAdd.Designer.cs">
       <DependentUpon>201904151212344_FlgTableAdd.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201904280513499_AddCountryName.cs" />
+    <Compile Include="Migrations\201904280513499_AddCountryName.Designer.cs">
+      <DependentUpon>201904280513499_AddCountryName.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CandleStick.cs" />
     <Compile Include="Models\ClassMaster.cs" />
@@ -179,6 +187,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201904151212344_FlgTableAdd.resx">
       <DependentUpon>201904151212344_FlgTableAdd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904280513499_AddCountryName.resx">
+      <DependentUpon>201904280513499_AddCountryName.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

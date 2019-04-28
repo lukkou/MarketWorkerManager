@@ -11,6 +11,7 @@ using System.Web.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
+using MarketWorkerManager.Utility;
 using MarketWorkerManager.Common;
 using MarketWorkerManager.Models;
 using MarketWorkerManager.Context;
@@ -83,6 +84,11 @@ namespace MarketWorkerManager.Logic
                 {
                     result.MyReleaseDate = result.ReleaseDateGmt;
                 }
+
+                if(result.CountryName == "null" || string.IsNullOrEmpty(result.CountryName))
+                {
+                    result.CountryName = Tools.CurrencyNameToCompanyName(result.CurrencyCode);
+                }
             }
 
             return results;
@@ -138,10 +144,12 @@ namespace MarketWorkerManager.Logic
 
                 if (dbDetail != null)
                 {
+                    dbDetail.CountryName = webDetail.CountryName;
                     if (dbDetail.Processed == Define.Index.ProcessedOff && webDetail.Processed == Define.Index.ProcessedOn)
                     {
                         //指標が公開された場合
                         dbDetail.ForecastValue = webDetail.ForecastValue;
+                        dbDetail.PreviousValue = webDetail.PreviousValue;
                         dbDetail.ActualValue = webDetail.ActualValue;
                         dbDetail.Processed = Define.Index.ProcessedOn;
 
@@ -161,6 +169,7 @@ namespace MarketWorkerManager.Logic
                     {
                         //予想データが初期では登録されていなかった場合
                         dbDetail.ForecastValue = webDetail.ForecastValue;
+                        dbDetail.PreviousValue = webDetail.PreviousValue;
 
                         results.Add(dbDetail);
                         Log.Logger.Info(dbDetail.GuidKey.ToString() + "の予測データ登録");

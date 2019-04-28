@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 
+using MarketWorkerManager.Common;
+
 namespace MarketWorkerManager.Utility
 {
     class Tools
@@ -122,6 +124,127 @@ namespace MarketWorkerManager.Utility
 
             return result;
         }
+
+        /// <summary>
+        /// 通貨コードを国名に変換
+        /// </summary>
+        /// <param name="currencyCode"></param>
+        /// <returns></returns>
+        public static string CurrencyNameToCompanyName(string currencyCode)
+        {
+            string result = string.Empty;
+
+            switch (currencyCode)
+            {
+                case Define.CurrencyCode.AU:
+                    //オーストラリ
+                    result = Define.CountryName.AU;
+                    break;
+
+                case Define.CurrencyCode.CA:
+                    //カナダ
+                    result = Define.CountryName.CA;
+                    break;
+
+                case Define.CurrencyCode.CH:
+                    //スイス
+                    result = Define.CountryName.CH;
+                    break;
+
+                case Define.CurrencyCode.EU:
+                    //ユーロ圏
+                    result = Define.CountryName.EU;
+                    break;
+
+                case Define.CurrencyCode.GB:
+                    //イギリス
+                    result = Define.CountryName.GB;
+                    break;
+
+                case Define.CurrencyCode.JP:
+                    //日本
+                    result = Define.CountryName.JP;
+                    break;
+
+                case Define.CurrencyCode.US:
+                    //アメリカ
+                    result = Define.CountryName.US;
+                    break;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 国名を国旗絵文字に変換
+        /// </summary>
+        /// <param name="countryName"></param>
+        /// <returns></returns>
+        public static string CountryNameToCountryFlag(string countryName)
+        {
+            string result = string.Empty;
+
+            switch (countryName)
+            {
+                case Define.CountryName.AU:
+                    //オーストラリ
+                    result = Define.CompanyFlag.AU;
+                    break;
+
+                case Define.CountryName.CA:
+                    //カナダ
+                    result = Define.CompanyFlag.CA;
+                    break;
+
+                case Define.CountryName.CH:
+                    //スイス
+                    result = Define.CompanyFlag.CH;
+                    break;
+
+                case Define.CountryName.EU:
+                    //ユーロ圏
+                    result = Define.CompanyFlag.EU;
+                    break;
+
+                case Define.CountryName.GB:
+                    //イギリス
+                    result = Define.CompanyFlag.GB;
+                    break;
+
+                case Define.CountryName.JP:
+                    //日本
+                    result = Define.CompanyFlag.JP;
+                    break;
+
+                case Define.CountryName.US:
+                    //アメリカ
+                    result = Define.CompanyFlag.US;
+                    break;
+
+                case Define.CountryName.DE:
+                    //ドイツ
+                    result = Define.CompanyFlag.DE;
+                    break;
+
+                case Define.CountryName.IT:
+                    //イタリア
+                    result = Define.CompanyFlag.IT;
+                    break;
+
+                case Define.CountryName.FR:
+                    //フランス
+                    result = Define.CompanyFlag.FR;
+                    break;
+
+                case Define.CountryName.ES:
+                    //スペイン
+                    result = Define.CompanyFlag.ES;
+                    break;
+            }
+
+            return result;
+        }
+
         #endregion
 
     }
