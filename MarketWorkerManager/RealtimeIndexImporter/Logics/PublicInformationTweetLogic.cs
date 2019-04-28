@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using CoreTweet;
 
+using RealtimeIndexImporter.Utility;
 using RealtimeIndexImporter.Common;
 using RealtimeIndexImporter.Models;
 
@@ -22,11 +19,14 @@ namespace RealtimeIndexImporter.Logic
             foreach(IndexCalendar item in list)
             {
                 string tweetText = string.Empty;
+                string countryFlag = Tools.CountryNameToCountryFlag(item.CountryName);
+
                 tweetText += "ーーー" + item.EventName + "ーーー\r\n";
-                tweetText += "通貨　[" + item.CurrencyCode + "]\r\n";
+                tweetText += "国　　[" + countryFlag + item.CountryName + "]\r\n";
                 tweetText += "今回値[" + item.ActualValue + "]\r\n";
                 tweetText += "予想値[" + item.ForecastValue + "]\r\n";
-                tweetText += "前回値[" + item.PreviousValue + "]\r\n";
+                tweetText += "前回値[" + item.PreviousValue + "]\r\n\r\n";
+                tweetText += Define.Mql5BaseUrl + item.LinkUrl;
 
                 tokens.Statuses.Update(status => tweetText);
             }
