@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using CoreTweet;
 
+using IndexNotification.Utility;
 using IndexNotification.Common;
 using IndexNotification.Models;
-using IndexNotification.Context;
 
 namespace IndexNotification.Logic
 {
@@ -24,14 +20,33 @@ namespace IndexNotification.Logic
             {
                 //ツイート文を作成
                 string tweetText = string.Empty;
+                string publicTime = list[i].MyReleaseDate.ToString("hh:mm");
+
+                string countryFlag = Tools.CountryNameToCountryFlag(list[i].CountryName);
+
                 tweetText += "@lukkou";
-                tweetText += "ーーー30分後に[" + list[i].EventName + "]の発表ーーー\r\n";
-                tweetText += "通貨　[" + list[i].CurrencyCode + "]\r\n";
+                tweetText += publicTime + "に[" + list[i].EventName + "]の発表\r\n";
+                tweetText += "国　　[" + countryFlag + list[i].CountryName + "]\r\n";
                 tweetText += "予想値[" + list[i].ForecastValue + "]\r\n";
-                tweetText += "前回値[" + list[i].PreviousValue + "]";
+                tweetText += "前回値[" + list[i].PreviousValue + "]\r\n\r\n";
+                tweetText += Define.Mql5BaseUrl + list[i].LinkUrl;
 
                 tokens.Statuses.Update(status => tweetText);
             }
+        }
+
+        /// <summary>
+        /// 通貨名を国名に変換
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        private string CurrencyNameToCompanyName(string name)
+        {
+            string result = string.Empty;
+
+
+
+            return result;
         }
     }
 }

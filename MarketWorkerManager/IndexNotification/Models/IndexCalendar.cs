@@ -154,5 +154,13 @@ namespace IndexNotification.Models
         [Display(Name = "MQL5コミュニティURL")]
         [JsonProperty("Url")]
         public string LinkUrl { get; set; }
+
+        /// <summary>
+        /// 国名（ユーロ圏のため）
+        /// </summary>
+        [MaxLength(2048)]
+        [Display(Name = "国名")]
+        [JsonProperty("CountryName")]
+        public string CountryName { get; set; }
     }
 }
