@@ -43,6 +43,11 @@
         public const string TimeModeIndexInfo = "0";
 
         /// <summary>
+        /// 指標発表のイベントタイプ（記者会見）
+        /// </summary>
+        public const int EventTypeAnnouncement = 0;
+
+        /// <summary>
         /// Tweeter関連
         /// </summary>
         public class Tweeter
