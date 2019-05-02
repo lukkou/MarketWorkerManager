@@ -24,29 +24,18 @@ namespace IndexNotification.Logic
 
                 string countryFlag = Tools.CountryNameToCountryFlag(list[i].CountryName);
 
-                tweetText += "@lukkou";
-                tweetText += publicTime + "に[" + list[i].EventName + "]の発表\r\n";
-                tweetText += "国　　[" + countryFlag + list[i].CountryName + "]\r\n";
-                tweetText += "予想値[" + list[i].ForecastValue + "]\r\n";
-                tweetText += "前回値[" + list[i].PreviousValue + "]\r\n\r\n";
+                tweetText += "@lukkou\r\n";
+                tweetText += publicTime + "に["+ countryFlag + list[i].CountryName + list[i].EventName + "]の発表\r\n";
+                tweetText += "通貨　[" + list[i].CurrencyCode + "]\r\n";
+                if(list[i].EventType != Define.EventTypeAnnouncement)
+                {
+                    tweetText += "予想値[" + list[i].ForecastValue + "]\r\n";
+                    tweetText += "前回値[" + list[i].PreviousValue + "]\r\n\r\n";
+                }
                 tweetText += Define.Mql5BaseUrl + list[i].LinkUrl;
 
                 tokens.Statuses.Update(status => tweetText);
             }
-        }
-
-        /// <summary>
-        /// 通貨名を国名に変換
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        private string CurrencyNameToCompanyName(string name)
-        {
-            string result = string.Empty;
-
-
-
-            return result;
         }
     }
 }
