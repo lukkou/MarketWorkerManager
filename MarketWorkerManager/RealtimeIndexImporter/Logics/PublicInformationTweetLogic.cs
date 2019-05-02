@@ -21,10 +21,13 @@ namespace RealtimeIndexImporter.Logic
                 string tweetText = string.Empty;
                 string countryFlag = Tools.CountryNameToCountryFlag(item.CountryName);
 
-                tweetText += "ーーー" + item.EventName + "ーーー\r\n";
-                tweetText += "国　　[" + countryFlag + item.CountryName + "]\r\n";
+                //memo lukkou: 文字列連結内では?:演算子が使えない；。；
+                string forecastValueaa = string.IsNullOrEmpty(item.ForecastValue) ? "--" : "item.ForecastValue";
+
+                tweetText += "ーーー" + countryFlag + item.CountryName + item.EventName + "ーーー\r\n";
+                tweetText += "通貨　　[" + item.CurrencyCode + "]\r\n";
                 tweetText += "今回値[" + item.ActualValue + "]\r\n";
-                tweetText += "予想値[" + item.ForecastValue + "]\r\n";
+                tweetText += "予想値[" + forecastValueaa + "]\r\n";
                 tweetText += "前回値[" + item.PreviousValue + "]\r\n\r\n";
                 tweetText += Define.Mql5BaseUrl + item.LinkUrl;
 
