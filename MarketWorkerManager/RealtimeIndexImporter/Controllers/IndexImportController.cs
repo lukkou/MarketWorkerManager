@@ -27,10 +27,19 @@ namespace RealtimeIndexImporter.Controller
                     {
                         while (true)
                         {
+                            Log.Logger.Info("データの取得開始 IdKey:" + item.IdKey);
                             var task = Logic.IndexCalendar.GetMql5JsonAsync();
                             task.Wait();
 
                             IndexCalendar webData = Logic.IndexCalendar.ResponseBodyToEntityModel(task.Result, item.IdKey);
+
+                            //5分データが取れなかったらツイートをあきらめる
+                            if(DateTime.Compare(DateTime.Now,afterFiveMinutes) == 1)
+                            {
+                                Log.Logger.Info("5分データを取得できませんでした IdKey:" + item.IdKey);
+                                break;
+                            }
+
                             if (webData == null || string.IsNullOrEmpty(webData.ActualValue))
                             {
                                 //リクエストを投げ続けないために10秒待機
@@ -40,14 +49,14 @@ namespace RealtimeIndexImporter.Controller
 
                             IndexCalendar margeData = Logic.IndexCalendar.MergeMyDataToNowData(item, webData);
                             tweetData.Add(margeData);
+                            Log.Logger.Info("データの取得完了 IdKey:" + item.IdKey);
                             break;
                         }
                     }
-
-                    Logic.BeginTransaction();
-
                     //Tweet
                     Logic.PublicInformationTweet.PublicInformationTweet(tweetData);
+
+                    Logic.BeginTransaction();
 
                     //指標データを更新
                     Logic.IndexCalendar.RegisteredIndexData(tweetData);
