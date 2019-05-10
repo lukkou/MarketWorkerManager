@@ -10,6 +10,11 @@ namespace IndexNotification.Logic
     class NotificationTweetLogic
     {
         /// <summary>
+        /// 金利文字定数
+        /// </summary>
+        private const string InterestRate = "金利";
+
+        /// <summary>
         /// 指標発表30分前情報をツイート
         /// </summary>
         /// <param name="list"></param>
@@ -20,19 +25,30 @@ namespace IndexNotification.Logic
             {
                 //ツイート文を作成
                 string tweetText = string.Empty;
-                string publicTime = list[i].MyReleaseDate.ToString("hh:mm");
+                string publicTime = list[i].MyReleaseDate.ToString("HH:mm");
 
                 string countryFlag = Tools.CountryNameToCountryFlag(list[i].CountryName);
+                string title = string.Empty;
+                title += countryFlag;
+                //タイトルに金利の文字が無い場合国名をつける
+                if (list[i].EventName.IndexOf(InterestRate) == -1)
+                {
+                    title += list[i].CountryName;
+                }
+                title += " " + list[i].EventName;
 
                 tweetText += "@lukkou\r\n";
-                tweetText += publicTime + "に["+ countryFlag + list[i].CountryName + list[i].EventName + "]の発表\r\n";
+                tweetText += publicTime + "に" + title + "の発表\r\n";
                 tweetText += "通貨　[" + list[i].CurrencyCode + "]\r\n";
-                if(list[i].EventType != Define.EventTypeAnnouncement)
+                if (list[i].EventType != Define.EventTypeAnnouncement)
                 {
-                    tweetText += "予想値[" + list[i].ForecastValue + "]\r\n";
-                    tweetText += "前回値[" + list[i].PreviousValue + "]\r\n\r\n";
+                    if (!string.IsNullOrEmpty(list[i].ForecastValue))
+                    {
+                        tweetText += "予想値[" + list[i].ForecastValue + "]\r\n";
+                    }
+                    tweetText += "前回値[" + list[i].PreviousValue + "]\r\n";
                 }
-                tweetText += Define.Mql5BaseUrl + list[i].LinkUrl;
+                tweetText += "\r\n" + Define.Mql5BaseUrl + list[i].LinkUrl;
 
                 tokens.Statuses.Update(status => tweetText);
             }

@@ -18,10 +18,10 @@ namespace IndexNotification.Controller
 
                 if (indexCalendarList.Any())
                 {
-                    Logic.BeginTransaction();
-
                     //ツイッターに指標発表前のお知らせ
                     Logic.NotificationTweet.IndexNotificationTweet(indexCalendarList);
+
+                    Logic.BeginTransaction();
 
                     //お知らせレコード登録
                     Logic.IndexCalendar.AddTweetFlg(indexCalendarList);
