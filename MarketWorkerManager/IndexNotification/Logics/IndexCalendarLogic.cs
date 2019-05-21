@@ -47,7 +47,7 @@ namespace IndexNotification.Logic
                     }
                 }
             }
-            
+
             return result;
         }
 

@@ -26,6 +26,11 @@ namespace MarketWorkerManager.Logic
         public HttpClient Client { get; set; }
 
         /// <summary>
+        /// 英国の固定文字
+        /// </summary>
+        private const string GreatBritain = "英国";
+
+        /// <summary>
         /// 指標カレンダーデータを取得
         /// </summary>
         /// <param name="from"></param>
@@ -89,6 +94,9 @@ namespace MarketWorkerManager.Logic
                 {
                     result.CountryName = Tools.CurrencyNameToCompanyName(result.CurrencyCode);
                 }
+
+                //英国の文字は固定で削除する
+                result.EventName = result.EventName.Replace(GreatBritain, string.Empty);
             }
 
             return results;
