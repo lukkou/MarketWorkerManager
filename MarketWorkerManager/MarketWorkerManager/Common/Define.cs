@@ -97,10 +97,10 @@ namespace MarketWorkerManager.Common
         /// </summary>
         public class Tweeter
         {
-            public const string ConsumerKey = "0t9p71eRVmaC2LQeLvfzoirW1";
-            public const string ConsumerSecret = "mKMqKpnWOaxdNmsMKpGCP3fVCAhT3IMnltgqrWs6WF5cEetrsN";
-            public const string AccessToken = "897014425856557056-b9RKh8QkJMw1B66En8ojxY93jh0LlU0";
-            public const string AccessSecret = "KSU3Qb2z7oF2vg9BQvbLmGGMAdMcHpgJF2zxCL4zlT1F3";
+            public const string ConsumerKey = "SCI6zXvgfqnaf2YqPkApUkwHv";
+            public const string ConsumerSecret = "LiR7cbVRC3TT1U8mvRDs2rYbGtNizkVNAwWQmEfwKlCG0MobdZ";
+            public const string AccessToken = "897014425856557056-P8kdYE8TstqUqD82DoJ0oInic62BjLn";
+            public const string AccessSecret = "A7kB8z0fEkszrtqig9x0BJS9NOx8CHCWlPTYxGEJWDJQb";
         }
 
         /// <summary>
