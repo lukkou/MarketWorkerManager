@@ -47,6 +47,8 @@ namespace MarketWorkerManager.Logic
             url.Append("&to=" + to + "T23:59:59");
             url.Append("&importance=15&currencies=127");
 
+            Log.Logger.Info(url.ToString());
+
             using (HttpResponseMessage response = await Client.GetAsync(url.ToString()))
             {
                 if (response.StatusCode == HttpStatusCode.OK)
