@@ -42,8 +42,8 @@ namespace RealtimeIndexImporter.Controller
 
                             if (webData == null || string.IsNullOrEmpty(webData.ActualValue))
                             {
-                                //リクエストを投げ続けないために10秒待機
-                                Thread.Sleep(10000);
+                                //リクエストを投げ続けないために60秒待機
+                                Thread.Sleep(60000);
                                 continue;
                             }
 
@@ -53,17 +53,20 @@ namespace RealtimeIndexImporter.Controller
                             break;
                         }
                     }
-                    //Tweet
-                    Logic.PublicInformationTweet.PublicInformationTweet(tweetData);
 
-                    Logic.BeginTransaction();
+                    if(tweetData.Count > 0)
+                    {
+                        //Tweet
+                        Logic.PublicInformationTweet.PublicInformationTweet(tweetData);
 
-                    //指標データを更新
-                    Logic.IndexCalendar.RegisteredIndexData(tweetData);
-                    Logic.IndexCalendar.RegisteredUpdateFlg(tweetData);
+                        Logic.BeginTransaction();
 
-                    Logic.Commit();
+                        //指標データを更新
+                        Logic.IndexCalendar.RegisteredIndexData(tweetData);
+                        Logic.IndexCalendar.RegisteredUpdateFlg(tweetData);
 
+                        Logic.Commit();
+                    }
                 }else
                 {
                     //データが無い場合は60秒止める
@@ -81,6 +84,8 @@ namespace RealtimeIndexImporter.Controller
                     Log.Logger.Error(e.InnerException.Message);
                     Log.Logger.Error(e.InnerException.StackTrace);
                 }
+                Console.WriteLine("エラーが発生しました。Eをクリックしてアプリを停止してください。");
+                Console.ReadKey();
             }
         }
     }
