@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using System.Web.Http;
 using System.Threading.Tasks;
 
@@ -31,6 +34,8 @@ namespace ApiTest
         {
             try
             {
+                GetPcInfo();
+
                 var task = GetMql5JsonAsync();
                 task.Wait();
 
@@ -52,6 +57,51 @@ namespace ApiTest
                 client.Dispose();
             }
         }
+
+        private void GetPcInfo()
+        {
+            // アダプタリストを取得する
+            NetworkInterface[] adapters = NetworkInterface.GetAllNetworkInterfaces();
+
+            foreach (NetworkInterface adapter in adapters)
+            {
+
+                // ネットワーク接続状態が UP のアダプタのみ表示 
+                if (adapter.OperationalStatus == OperationalStatus.Up)
+                {
+                    Console.WriteLine("//-----------------------------------------------------------------------------");
+                    Console.WriteLine(adapter.Name);         // アダプタ名
+                    Console.WriteLine(adapter.Description);  // アダプタの説明
+
+                    IPInterfaceProperties ip_prop = adapter.GetIPProperties();
+
+                    // ユニキャスト IP アドレスの取得
+                    UnicastIPAddressInformationCollection addrs = ip_prop.UnicastAddresses;
+                    foreach (UnicastIPAddressInformation addr in addrs)
+                    {
+                        Console.WriteLine(addr.Address.ToString());
+
+                        // メモ
+                        //-----------------------------------------------------------------------------
+                        // IPv4 : addr.Address.AddressFamily = Net.Sockets.AddressFamily.InterNetwork 
+                        // IPv6 : addr.Address.AddressFamily = Net.Sockets.AddressFamily.InterNetwork6 
+                    }
+
+                    // ゲートウェイ IP アドレスの取得
+                    GatewayIPAddressInformationCollection gates = ip_prop.GatewayAddresses;
+                    foreach (GatewayIPAddressInformation gate in gates)
+                    {
+                        Console.WriteLine("ゲートウェイ情報：" + gate.Address.ToString());
+                    }
+
+                    // 物理（MAC）アドレスの取得
+                    PhysicalAddress phy = adapter.GetPhysicalAddress();
+                    Console.WriteLine("MACアドレス：" + phy.ToString());
+                }
+            }
+        }
+
+
 
         private async Task<string> GetMql5JsonAsync()
         {
