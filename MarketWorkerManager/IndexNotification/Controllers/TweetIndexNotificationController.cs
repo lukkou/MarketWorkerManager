@@ -43,6 +43,9 @@ namespace IndexNotification.Controller
                     Log.Logger.Error(e.InnerException.Message);
                     Log.Logger.Error(e.InnerException.StackTrace);
                 }
+
+                Console.WriteLine("エラーが発生しました。Eをクリックしてアプリを停止してください。");
+                Console.ReadKey();
             }
         }
     }
