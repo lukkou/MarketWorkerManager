@@ -88,6 +88,8 @@ namespace RealtimeIndexImporter.Logic
             url.Append("&to=" + toDay + "T" + toTime);
             url.Append("&importance=15&currencies=127");
 
+            Log.Logger.Info("URL:" + url.ToString());
+            
             using (HttpResponseMessage response = await Client.GetAsync(url.ToString()))
             {
                 if (response.StatusCode == HttpStatusCode.OK)
