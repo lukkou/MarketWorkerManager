@@ -18,10 +18,15 @@ namespace MarketWorkerManager.Controllers
         {
             try
             {
+                
                 int nowDay = DateTime.Now.Day;
                 bool connectStatus = IsDatabaseConnectCheck();
+
                 if (!connectStatus)
                 {
+                    //2019/7/30にツイッターがTLS 1.2に対応したため通信方法を設定
+                    System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
+
                     //データベースに繋がらないことをツイッターに通知
                     var tokens = Tokens.Create(Define.Tweeter.ConsumerKey, Define.Tweeter.ConsumerSecret, Define.Tweeter.AccessToken, Define.Tweeter.AccessSecret);
 
@@ -33,7 +38,7 @@ namespace MarketWorkerManager.Controllers
                         tweetText += " \r\n15日に発生しました。翌月指標の取り込みが行われていません！！";
                     }
 
-                    tokens.Statuses.Update(status => tweetText);
+                    tokens.Statuses.Update(status => "CoreTweetReplyTest");
                     return;
                 }
 

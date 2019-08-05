@@ -25,6 +25,9 @@ namespace IndexNotification.Logic
         /// <param name="list"></param>
         public void IndexNotificationTweet(List<IndexCalendar> list)
         {
+            //2019/7/30にツイッターがTLS 1.2に対応したため通信方法を設定
+            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
+
             var tokens = Tokens.Create(Define.Tweeter.ConsumerKey, Define.Tweeter.ConsumerSecret, Define.Tweeter.AccessToken, Define.Tweeter.AccessSecret);
             for (int i = 0; i < list.Count; i++)
             {
@@ -36,15 +39,14 @@ namespace IndexNotification.Logic
                 string title = string.Empty;
                 title += countryFlag;
 
-                //英国の文字は固定で削除する
-                title = title.Replace(GreatBritain, string.Empty);
-
                 //タイトルに金利の文字が無い場合国名をつける
                 if (list[i].EventName.IndexOf(InterestRate) == -1)
                 {
                     title += list[i].CountryName;
                 }
-                title += " " + list[i].EventName;
+
+                //英国の文字は固定で削除する
+                title += " " + list[i].EventName.Replace(GreatBritain, string.Empty);
 
                 tweetText += "@lukkou\r\n";
                 tweetText += publicTime + "に" + title + "の発表\r\n";
