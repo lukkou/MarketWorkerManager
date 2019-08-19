@@ -157,6 +157,7 @@
     <Compile Include="Models\DataModels\DeleteStockModel.cs" />
     <Compile Include="Models\DataModels\TokyoStockExchangeExcelModel.cs" />
     <Compile Include="Models\ExchangeTimeLine.cs" />
+    <Compile Include="Models\History.cs" />
     <Compile Include="Models\IndexCalendar.cs" />
     <Compile Include="Models\IndustryCode17Master.cs" />
     <Compile Include="Models\IndustryCode33Master.cs" />
