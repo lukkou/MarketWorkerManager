@@ -27,7 +27,11 @@ namespace ApiTest
         /// </summary>
         public ApiTestController()
         {
-            client = new HttpClient();
+            var baseAddress = new Uri("https://www.mql5.com/ja/economic-calendar");
+            var cookieContainer = new CookieContainer();
+            var handler = new HttpClientHandler() { CookieContainer = cookieContainer };
+
+            client = new HttpClient(handler) { BaseAddress = baseAddress };
         }
 
         public void Run()
@@ -52,7 +56,7 @@ namespace ApiTest
                 }
             }
 
-            if(client != null)
+            if (client != null)
             {
                 client.Dispose();
             }
@@ -101,6 +105,44 @@ namespace ApiTest
             }
         }
 
+
+        private async Task<string> GetPostMQL5()
+        {
+            
+
+
+            var results = string.Empty;
+            string url = string.Empty;
+
+            //POSTパラメーター作成
+            var parameters = new Dictionary<string, string>()
+            {
+                { "date_mode", "4" },
+                { "from", "2019-09-01T00:00:00" },
+                { "to", "2019-09-30T23:59:59" },
+                { "importance", "15" },
+                { "currencies", "127" },
+            };
+            var content = new FormUrlEncodedContent(parameters);
+
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, url);
+            request.Headers.Add("Cookie", "lang=ja; uniq=5046563697952439240; _fz_fvdt=1568328136; _fz_uniq=5046563697952439240; sid=yhvbyfaqu10uunf20x42kfhh; cookie_accept=1; utm_campaign=ja.news.calendar.10.reasons; utm_source=www.metatrader4.com; _fz_ssn=1569738437144968219");
+
+            using (var response = await client.PostAsync("/ja/economic-calendar/content", content))
+            {
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    results = await response.Content.ReadAsStringAsync();
+                }
+                else
+                {
+                    //THHPステータス 200以外
+                    throw new HttpResponseException(HttpStatusCode.NotFound);
+                }
+            }
+
+            return results;
+        }
 
 
         private async Task<string> GetMql5JsonAsync()
