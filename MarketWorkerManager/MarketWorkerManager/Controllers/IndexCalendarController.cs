@@ -38,7 +38,6 @@ namespace MarketWorkerManager.Controllers
                         tweetText += " \r\n15日に発生しました。翌月指標の取り込みが行われていません！！";
                     }
 
-                    tokens.Statuses.Update(status => "CoreTweetReplyTest");
                     return;
                 }
 
