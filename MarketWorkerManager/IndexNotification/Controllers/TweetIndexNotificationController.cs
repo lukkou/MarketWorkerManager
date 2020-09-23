@@ -29,7 +29,7 @@ namespace IndexNotification.Controller
                 }else
                 {
                     //データが無い場合は60秒止める
-                    Thread.Sleep(60000);
+                    Thread.Sleep(120000);
                 }
             }
             catch (Exception e)

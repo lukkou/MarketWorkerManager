@@ -1,7 +1,7 @@
 ﻿using System.Data.Common;
 using System.Data.Entity;
 using System.Data.Entity.Migrations.History;
-using MySql.Data.Entity;
+using MySql.Data.EntityFramework;
 using MySql.Data.MySqlClient;
 
 using IndexNotification.Models;
