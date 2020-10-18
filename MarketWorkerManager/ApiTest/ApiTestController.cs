@@ -6,6 +6,7 @@ using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Web.Http;
 using System.Threading.Tasks;
+using System.Text;
 
 namespace ApiTest
 {
@@ -19,8 +20,6 @@ namespace ApiTest
         /// タイミングでクローズする。
         /// </summary>
         private HttpClient client { get; set; }
-        private CookieContainer cookieContainer = null;
-
 
         /// <summary>1029
         /// コンストラクター
@@ -28,7 +27,6 @@ namespace ApiTest
         public ApiTestController()
         {
             var baseAddress = new Uri("https://www.mql5.com");
-            cookieContainer = new CookieContainer();
 
             client = new HttpClient() { BaseAddress = baseAddress };
         }
@@ -39,11 +37,14 @@ namespace ApiTest
             {
                 GetPcInfo();
 
-                //var task = GetPostMQL5();
-                var task = GetMql5JsonAsync();
-                task.Wait();
 
-                Console.WriteLine(task.Result);
+                var getTask = GetMql5Async();
+                getTask.Wait();
+
+                var postTask = GetPostMQL5Async(getTask.Result);
+                postTask.Wait();
+
+                Console.WriteLine(postTask.Result);
             }
             catch (Exception e)
             {
@@ -106,10 +107,10 @@ namespace ApiTest
         }
 
 
-        private async Task<string> GetPostMQL5()
+        private async Task<string> GetPostMQL5Async(CookieInformation cookie)
         {
             var results = string.Empty;
-            string url = "https://www.mql5.com/ja/economic-calendar";
+            string url = "https://www.mql5.com/ja/economic-calendar/content";
 
             //POSTパラメーター作成
             var parameters = new Dictionary<string, string>()
@@ -122,11 +123,23 @@ namespace ApiTest
             };
             var content = new FormUrlEncodedContent(parameters);
 
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, url);
-            //HttpWebResponse res = (HttpWebResponse)request.GetResponse();
-            //request.Headers.Add("Cookie", "lang=ja; uniq=5046563697952439240; _fz_fvdt=1568328136; _fz_uniq=5046563697952439240; sid=yhvbyfaqu10uunf20x42kfhh; cookie_accept=1; utm_campaign=ja.news.calendar.10.reasons; utm_source=www.metatrader4.com; _fz_ssn=1569738437144968219");
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, url);
+            //request.Headers.Add("accept-encoding", "gzip, deflate, br");
+            request.Headers.Add("accept-language", "ja,en;q=0.9,en-GB;q=0.8,en-US;q=0.7");
+            request.Headers.Add("cache-control", "no-cache");
 
-            using (var response = await client.PostAsync("/ja/economic-calendar/content", content))
+            string cookieString = "_fz_uniq=" + cookie._fz_uniq + "; lang=" + cookie.lang + "; uniq=" + cookie.uniq;
+            request.Headers.Add("cookie", cookieString);
+
+            request.Headers.Add("pragma", "no-cache");
+            request.Headers.Add("sec-fetch-mode", "cors");
+            request.Headers.Add("sec-fetch-site", "same-origin");
+            request.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.80 Safari/537.36 Edg/86.0.622.43");
+            request.Headers.Add("x-requested-with", "XMLHttpRequest");
+
+            request.Content = content;
+
+            using (var response = await client.SendAsync(request))
             {
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
@@ -143,9 +156,10 @@ namespace ApiTest
         }
 
 
-        private async Task<CookieInformation> GetMql5JsonAsync()
+        private async Task<CookieInformation> GetMql5Async()
         {
-            var results = new CookieInformation();
+            CookieInformation results = new CookieInformation();
+
             string url = "https://www.mql5.com/ja/economic-calendar";
             //string url = "https://www.mql5.com";
             //url = "https://www.mql5.com/ja/economic-calendar/content?date_mode=1&from=2019-08-05T00%3A00%3A00&to=2019-08-11T23%3A59%3A59&importance=8&currencies=127";
@@ -165,12 +179,28 @@ namespace ApiTest
             {
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
+                    //string aa = await response.Content.ReadAsStringAsync();
                     IEnumerable<string> cookieList = response.Headers.GetValues("Set-Cookie");
                     foreach(string cookie in cookieList)
                     {
-                        string cookieItem = cookie.Split
+                        string[] cookieItem = cookie.Split(';');
+                        foreach(string cookieValue in cookieItem)
+                        {
+                            //uniqを取得
+                            if (cookieValue.IndexOf("uniq") >= 0)
+                            {
+                                string uniqValue = cookieValue.Replace("uniq=", string.Empty).Trim();
+                                results.uniq = uniqValue;
+                                results._fz_uniq = uniqValue;
+                            }
+
+                            // langを取得
+                            if(cookieValue.IndexOf("lang") >= 0)
+                            {
+                                results.lang = cookieValue.Replace("lang=", string.Empty).Trim();
+                            }
+                        }
                     }
-                    string aa = await response.Content.ReadAsStringAsync();
                 }
                 else
                 {
