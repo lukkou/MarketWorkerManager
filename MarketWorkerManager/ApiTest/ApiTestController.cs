@@ -11,7 +11,6 @@ namespace ApiTest
 {
     class ApiTestController
     {
-
         /// <summary>
         /// HTTPクライアントオブジェクト
         /// ※usingを使用した場合、using毎回ソケットがオープンされ
@@ -22,7 +21,8 @@ namespace ApiTest
         private HttpClient client { get; set; }
         private CookieContainer cookieContainer = null;
 
-        /// <summary>
+
+        /// <summary>1029
         /// コンストラクター
         /// </summary>
         public ApiTestController()
@@ -107,7 +107,7 @@ namespace ApiTest
 
 
         private async Task<string> GetPostMQL5()
-        {          
+        {
             var results = string.Empty;
             string url = "https://www.mql5.com/ja/economic-calendar";
 
@@ -143,9 +143,9 @@ namespace ApiTest
         }
 
 
-        private async Task<string> GetMql5JsonAsync()
+        private async Task<CookieInformation> GetMql5JsonAsync()
         {
-            var results = string.Empty;
+            var results = new CookieInformation();
             string url = "https://www.mql5.com/ja/economic-calendar";
             //string url = "https://www.mql5.com";
             //url = "https://www.mql5.com/ja/economic-calendar/content?date_mode=1&from=2019-08-05T00%3A00%3A00&to=2019-08-11T23%3A59%3A59&importance=8&currencies=127";
@@ -165,8 +165,12 @@ namespace ApiTest
             {
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
-
-                    results = await response.Content.ReadAsStringAsync();
+                    IEnumerable<string> cookieList = response.Headers.GetValues("Set-Cookie");
+                    foreach(string cookie in cookieList)
+                    {
+                        string cookieItem = cookie.Split
+                    }
+                    string aa = await response.Content.ReadAsStringAsync();
                 }
                 else
                 {
