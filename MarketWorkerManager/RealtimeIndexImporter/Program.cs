@@ -7,10 +7,10 @@ namespace RealtimeIndexImporter
     {
         static void Main(string[] args)
         {
-            using (IndexImportController indexImport = new IndexImportController())
+            Console.WriteLine("重要指標通知exe\r\nEをクリックすると止まります");
+            while (true)
             {
-                Console.WriteLine("重要指標通知exe\r\nEをクリックすると止まります");
-                while (true)
+                using (IndexImportController indexImport = new IndexImportController())
                 {
                     indexImport.Run();
 
@@ -24,6 +24,7 @@ namespace RealtimeIndexImporter
                     }
                 }
             }
+            
         }
     }
 }
