@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CoreTweet;
 
 using MarketWorkerManager.Common;
 using MarketWorkerManager.Models;
@@ -8,82 +9,105 @@ using MarketWorkerManager.Models;
 
 namespace MarketWorkerManager.Controllers
 {
-	class IndexCalendarController : BaseController
-	{
-		/// <summary>
-		/// エントリーポイント
-		/// </summary>
-		public void Run()
-		{
-			try
-			{
-				int nowDay = DateTime.Now.Day;
-				//int nowDay = 15;
-				if (nowDay == 15)
-				{
-					//毎月15日に翌月データを取得する
-					NextMonthlyProcessing();
-				}
+    class IndexCalendarController : BaseController
+    {
+        /// <summary>
+        /// エントリーポイント
+        /// </summary>
+        public void Run()
+        {
+            try
+            {
+                
+                int nowDay = DateTime.Now.Day;
+                bool connectStatus = IsDatabaseConnectCheck();
 
-				DailyProcessing();
-			}
-			catch (Exception e)
-			{
-				Log.Logger.Error(e.ToString());
-				Console.WriteLine(e.Message);
-				Console.ReadKey();
-			}
-		}
+                if (!connectStatus)
+                {
+                    //2019/7/30にツイッターがTLS 1.2に対応したため通信方法を設定
+                    System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
 
-		/// <summary>
-		/// 翌月の経済指標データの取得と登録
-		/// </summary>
-		private void NextMonthlyProcessing()
-		{
-			string nextMonthStart = DateTime.Now.AddMonths(1).ToString("yyyy-MM") + "-01";
-			string nextMonthEnd = DateTime.Parse(DateTime.Now.AddMonths(2).ToString("yyyy-MM") + "-01 00:00:00").AddDays(-1).ToString("yyyy-MM-dd");
+                    //データベースに繋がらないことをツイッターに通知
+                    var tokens = Tokens.Create(Define.Tweeter.ConsumerKey, Define.Tweeter.ConsumerSecret, Define.Tweeter.AccessToken, Define.Tweeter.AccessSecret);
 
-			Log.Logger.Info(nextMonthStart + "-" + nextMonthEnd + "のデータ取得");
+                    string tweetText = "@lukkou \r\n";
+                    tweetText += DateTime.Now.ToString("yyyy/MM/dd hh:mm") + "MySQLへの接続失敗^；。；^ ";
+                    tweetText += "MySQL Serverを起動してください。";
+                    if (nowDay == 15)
+                    {
+                        tweetText += " \r\n15日に発生しました。翌月指標の取り込みが行われていません！！";
+                    }
 
-			var task = Logic.IndexData.GetMql5JsonAsync(nextMonthStart, nextMonthEnd);
-			task.Wait();
-
-			List<IndexCalendar> jsonData = Logic.IndexData.ResponseBodyToEntityModel(task.Result);
-			List<IndexCalendar> indexData = Logic.IndexData.GetSpecifiedRangeIndex(jsonData, nextMonthStart, nextMonthEnd);
-
-			//当月で登録されているデータを取得
-			string nowMonthStart = DateTime.Now.ToString("yyyy-MM") + "-01";
-			string nowMonthEnd = DateTime.Parse(DateTime.Now.AddMonths(1).ToString("yyyy-MM") + "-01 00:00:00").AddDays(-1).ToString("yyyy-MM-dd");
-			List<IndexCalendar> nowMonthData = Logic.IndexData.GetRegisteredIndex(nowMonthStart, nowMonthEnd);
-			
+                    return;
+                }
 
 
-			Logic.IndexData.RegisteredIndexData(indexData,true);
-		}
+                //nowDay = 15;
+                if (nowDay == 15)
+                {
+                    //毎月15日に翌月データを取得する
+                    NextMonthlyProcessing();
+                }
 
-		/// <summary>
-		/// 毎日の経済指標データ更新
-		/// </summary>
-		private void DailyProcessing()
-		{
-			string currentMonthStart = DateTime.Parse(DateTime.Now.ToString("yyyy-MM") + "-01 00:00:00").AddDays(-1).ToString("yyyy-MM-dd");
-			string nowDay = DateTime.Now.ToString("yyyy-MM-dd");
+                DailyProcessing();
+            }
+            catch (Exception e)
+            {
+                Log.Logger.Error(e.ToString());
+                Console.WriteLine(e.Message);
+                Console.ReadKey();
+            }
+        }
 
-			Log.Logger.Info(currentMonthStart + "-" + nowDay + "のデータ取得");
+        /// <summary>
+        /// 翌月の経済指標データの取得と登録
+        /// </summary>
+        private void NextMonthlyProcessing()
+        {
+            string nextMonthStart = DateTime.Now.AddMonths(1).ToString("yyyy-MM") + "-01";
+            string nextMonthEnd = DateTime.Parse(DateTime.Now.AddMonths(2).ToString("yyyy-MM") + "-01 00:00:00").AddDays(-1).ToString("yyyy-MM-dd");
 
-			var task = Logic.IndexData.GetMql5JsonAsync(currentMonthStart, nowDay);
-			task.Wait();
+            Log.Logger.Info(nextMonthStart + "-" + nextMonthEnd + "のデータ取得");
 
-			List<IndexCalendar> myData = Logic.IndexData.GetRegisteredIndex(currentMonthStart, nowDay);
-			List<IndexCalendar> jsonData = Logic.IndexData.ResponseBodyToEntityModel(task.Result);
-			List<IndexCalendar> webData = Logic.IndexData.GetSpecifiedRangeIndex(jsonData, currentMonthStart, nowDay);
+            var task = Logic.IndexData.GetMql5JsonAsync(nextMonthStart, nextMonthEnd);
+            task.Wait();
 
-			List<IndexCalendar> importData = Logic.IndexData.CompareNewnessIndexData(myData, webData);
+            List<IndexCalendar> jsonData = Logic.IndexData.ResponseBodyToEntityModel(task.Result);
+            List<IndexCalendar> indexData = Logic.IndexData.GetSpecifiedRangeIndex(jsonData, nextMonthStart, nextMonthEnd);
 
-			if (importData.Any())
-			{
-				Logic.IndexData.RegisteredIndexData(importData);
-			}
-		}
-	}
+            //当月で登録されているデータを取得
+            string nowMonthStart = DateTime.Now.ToString("yyyy-MM") + "-01";
+            string nowMonthEnd = DateTime.Parse(DateTime.Now.AddMonths(1).ToString("yyyy-MM") + "-01 00:00:00").AddDays(-1).ToString("yyyy-MM-dd");
+            List<IndexCalendar> nowMonthData = Logic.IndexData.GetRegisteredIndex(nowMonthStart, nowMonthEnd);
+
+
+
+            Logic.IndexData.RegisteredIndexData(indexData, true);
+        }
+
+        /// <summary>
+        /// 毎日の経済指標データ更新
+        /// </summary>
+        private void DailyProcessing()
+        {
+            string currentMonthStart = DateTime.Parse(DateTime.Now.ToString("yyyy-MM") + "-01 00:00:00").AddDays(-1).ToString("yyyy-MM-dd");
+            string nowDay = DateTime.Now.ToString("yyyy-MM-dd");
+
+            Log.Logger.Info(currentMonthStart + "-" + nowDay + "のデータ取得");
+
+            var task = Logic.IndexData.GetMql5JsonAsync(currentMonthStart, nowDay);
+            task.Wait();
+
+            List<IndexCalendar> myData = Logic.IndexData.GetRegisteredIndex(currentMonthStart, nowDay);
+            List<IndexCalendar> jsonData = Logic.IndexData.ResponseBodyToEntityModel(task.Result);
+            List<IndexCalendar> webData = Logic.IndexData.GetSpecifiedRangeIndex(jsonData, currentMonthStart, nowDay);
+
+            List<IndexCalendar> importData = Logic.IndexData.CompareNewnessIndexData(myData, webData);
+
+            if (importData.Any())
+            {
+                Logic.IndexData.RegisteredIndexData(importData);
+            }
+        }
+    }
 }
