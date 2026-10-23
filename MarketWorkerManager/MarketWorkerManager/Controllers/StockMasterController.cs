@@ -11,15 +11,15 @@ using MarketWorkerManager.DataModels;
 
 namespace MarketWorkerManager.Controllers
 {
-	class StockMasterController : BaseController
-	{
-		/// <summary>
-		/// エントリーポイント
-		/// </summary>
-		public void Run()
-		{
+    class StockMasterController : BaseController
+    {
+        /// <summary>
+        /// エントリーポイント
+        /// </summary>
+        public void Run()
+        {
 
-		}
+        }
 
-	}
+    }
 }
